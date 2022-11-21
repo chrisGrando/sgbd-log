@@ -57,5 +57,5 @@ public class LoggerOutput {
             logger.addHandler(h);
         }
     }
-
+    
 }

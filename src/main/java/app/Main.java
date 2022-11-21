@@ -47,7 +47,9 @@ public class Main {
         globalLogger("UTF8");
         
         //Executa aplicativo
-        System.out.println("Hello World!");
+        AppStates app = new AppStates();
+        app.start();
+        app.execute();
     }
     
     //Altera o método e as codificações das saídas de texto
