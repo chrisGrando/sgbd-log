@@ -6,7 +6,7 @@ package app;
 
 import globals.AppSystem;
 import globals.PSQL;
-import sgdb.PostgreSQL;
+//import sgdb.PostgreSQL;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.time.format.DateTimeFormatter;
@@ -25,8 +25,10 @@ public class AppStates {
     //Execução do aplicativo
     public void execute() {
         this.psqlInfo();
-        PostgreSQL psql = new PostgreSQL();
+        /*PostgreSQL psql = new PostgreSQL();
         psql.connectToPostgres();
+        psql.runQuery("select * from departamentos;");
+        psql.runQuery("select * from empregados;");*/
     }
     
     //Exibe informações da máquina
@@ -53,22 +55,26 @@ public class AppStates {
         String myDir;
         try {
             myDir = AppSystem.getJarFolder();
+            System.out.println("Diretório: " + myDir);
         }
         catch(URISyntaxException error) {
-            String msg = "[ERRO] Não foi possível obter caminho do diretório...";
+            String msg = "[FATAL] Não foi possível obter diretório do aplicativo...";
             Logger.getGlobal().log(Level.SEVERE, msg, error);
-            myDir = System.getProperty("user.dir");
+            System.out.println(msg); //Mensagem no console normal
+            System.exit(1); //Fecha aplicativo
         }
-        System.out.println("Diretório: " + myDir);
+        
+        System.out.println();
     }
     
     //Exibe dados globais do PostgreSQL
     private void psqlInfo() {
-        System.out.println("\n################# PSQL #################");
+        System.out.println("################# PSQL #################");
         System.out.println("Host: " + PSQL.HOST);
         System.out.println("Port: " + PSQL.PORT);
         System.out.println("Database: " + PSQL.DATABASE);
         System.out.println("User: " + PSQL.USER);
+        System.out.println();
     }
     
 }
