@@ -4,10 +4,48 @@
 **/
 package sgdb;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TableBehavior {
+    
+    //Gera array de objetos do query
+    public List<Object[]> generateListFromQuery(ResultSet query) 
+      throws SQLException {
+        List<Object[]> newObjectList = new ArrayList<>();
+        ResultSetMetaData rsmd = query.getMetaData();
+        final int size = rsmd.getColumnCount();
+        Object labels[] = new Object[size];
+        
+        //Obtém nome das colunas
+        for(int i = 0; i < size; i++) {
+            int column = i + 1;
+            labels[i] = rsmd.getColumnName(column);
+        }
+        
+        //Adiciona os rótulos na lista
+        newObjectList.add(labels);
+        
+        //Percorre cada linha
+        do {
+            Object row[] = new Object[size];
+            
+            //Vasculha cada coluna
+            for(int i = 0; i < size; i++) {
+                int column = i + 1;
+                row[i] = query.getObject(column);
+            }
+            
+            //Adiciona linha na lista
+            newObjectList.add(row);
+            
+        } while(query.next()); //Checa se há mais linhas
+        
+        return newObjectList;
+    }
     
     //Converte tabela de objetos em tabela de Strings
     public List<String[]> convertTableToString(List<Object[]> srcTable) {
@@ -32,7 +70,7 @@ public class TableBehavior {
     }
     
     //Exibe todo o conteúdo da tabela (com formatação de espaçamento)
-    public String showAll(List<String[]> srcTable) {
+    public String showAllData(List<String[]> srcTable) {
         String table = "";
         int maxSize = 0;
         

@@ -28,7 +28,7 @@
 /**
 *** @author chrisGrando
 *** Classe destinada somente para inicialização do sistema.
-*** Lógica do software fica localizada em AppStates.
+*** Lógica do software fica localizada em AppLogic.
 **/
 package app;
 
@@ -47,7 +47,7 @@ public class Main {
         globalLogger("UTF8");
         
         //Executa aplicativo
-        AppStates app = new AppStates();
+        AppLogic app = new AppLogic();
         app.start();
         app.execute();
     }

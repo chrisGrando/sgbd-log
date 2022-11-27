@@ -6,7 +6,7 @@ package app;
 
 import globals.AppSystem;
 import globals.PSQL;
-//import sgdb.PostgreSQL;
+//import sgdb.*;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +15,7 @@ import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-public class AppStates {
+public class AppLogic {
     
     //Inicialização do aplicativo
     public void start() {
@@ -28,6 +28,7 @@ public class AppStates {
         /*PostgreSQL psql = new PostgreSQL();
         psql.connectToPostgres();
         psql.runQuery("select * from departamentos;");
+        psql.runQuery("update empregados set salario = 8000 where emp_id = 1;");
         psql.runQuery("select * from empregados;");*/
     }
     
@@ -74,6 +75,7 @@ public class AppStates {
         System.out.println("Port: " + PSQL.PORT);
         System.out.println("Database: " + PSQL.DATABASE);
         System.out.println("User: " + PSQL.USER);
+        System.out.println("URL: " + PSQL.GET_URL());
         System.out.println();
     }
     
