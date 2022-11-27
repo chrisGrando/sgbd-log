@@ -35,6 +35,7 @@
                     <archive>
                         <manifest>
                             <mainClass>app.Main</mainClass>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                     </archive>
                     <descriptorRefs>

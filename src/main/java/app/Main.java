@@ -48,7 +48,7 @@ public class Main {
         
         //Executa aplicativo
         AppLogic app = new AppLogic();
-        app.start();
+        app.start(args);
         app.execute();
     }
     
