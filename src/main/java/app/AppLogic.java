@@ -6,7 +6,6 @@ package app;
 
 import globals.AppSystem;
 import globals.PSQL;
-//import sgdb.*;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.time.format.DateTimeFormatter;
@@ -16,15 +15,6 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class AppLogic {
-    //Mensagens de aviso
-    private final String INCORRECT_USE;
-    private final String CALL_HELP;
-    
-    //Construtor
-    public AppLogic() {
-        INCORRECT_USE = "[AVISO] Parâmetro desconhecido ou uso incorreto!";
-        CALL_HELP = "Use [-h] para ver a lista de parâmetros disponíveis.";
-    }
     
     //Inicialização do aplicativo
     public void start(String[] args) {
@@ -39,50 +29,71 @@ public class AppLogic {
             if(Character.compare(firstChar, '-') != 0)
                 continue;
             
-            //Checa se é um parâmetro válido
-            if(this.isValid(args, i, size)) {
-               //Processa os parâmetros
-                switch (args[i]) {
-                    case "-v":
-                        String info = AppSystem.getAppName() + " ~ " + AppSystem.getAppVersion();
-                        AppSystem.CONSOLE_OUTPUT.println(info);
-                        System.exit(0);
-                        break;
-                    case "-h":
-                        String help = AppSystem.getHelpText();
-                        AppSystem.CONSOLE_OUTPUT.println(help);
-                        System.exit(0);
-                        break;
-                    case "-host":
+            //Processa os parâmetros
+            switch (args[i]) {
+                case "-v":
+                    String info = AppSystem.getAppName() + " ~ " + AppSystem.getAppVersion();
+                    AppSystem.CONSOLE_OUTPUT.println(info);
+                    System.exit(0);
+                    break;
+                case "-h":
+                    String help = AppSystem.getHelpText();
+                    AppSystem.CONSOLE_OUTPUT.println(help);
+                    System.exit(0);
+                    break;
+                case "-host":
+                    if(this.isDoubleCommand(args, i, size))
                         PSQL.HOST = args[i + 1];
-                        break;
-                    case "-port":
+                    else
+                        this.invalidParameter(args, i, false);
+                    break;
+                case "-port":
+                    if(this.isDoubleCommand(args, i, size))
                         PSQL.PORT = args[i + 1];
-                        break;
-                    case "-database":
+                    else
+                        this.invalidParameter(args, i, false);
+                    break;
+                case "-database":
+                    if(this.isDoubleCommand(args, i, size))
                         PSQL.DATABASE = args[i + 1];
-                        break;
-                    case "-user":
+                    else
+                        this.invalidParameter(args, i, false);
+                    break;
+                case "-user":
+                    if(this.isDoubleCommand(args, i, size))
                         PSQL.USER = args[i + 1];
-                        break;
-                    case "-password":
+                    else
+                        this.invalidParameter(args, i, false);
+                    break;
+                case "-password":
+                    if(this.isDoubleCommand(args, i, size))
                         PSQL.PASSWORD = args[i + 1];
-                        break;
-                    case "-log":
+                    else
+                        this.invalidParameter(args, i, false);
+                    break;
+                case "-log":
+                    if(this.isDoubleCommand(args, i, size))
                         AppSystem.SGBD_LOG = args[i + 1];
-                        break;
-                    case "-table":
+                    else
+                        this.invalidParameter(args, i, false);
+                    break;
+                case "-table":
+                    if(this.isDoubleCommand(args, i, size))
                         AppSystem.TABLE_NAME = args[i + 1];
-                        break;
-                    case "-json":
+                    else
+                        this.invalidParameter(args, i, false);
+                    break;
+                case "-json":
+                    if(this.isDoubleCommand(args, i, size))
                         AppSystem.JSON_TABLE = args[i + 1];
-                        break;
-                    default:
-                        System.out.println(this.INCORRECT_USE);
-                        System.out.println("Comando: " + args[i]);
-                        System.out.println(this.CALL_HELP);
-                        System.out.println();
-                }
+                    else
+                        this.invalidParameter(args, i, false);
+                    break;
+                default:
+                    if(this.isDoubleCommand(args, i, size))
+                        this.invalidParameter(args, i, true);
+                    else
+                        this.invalidParameter(args, i, false);
             }
         }
     }
@@ -94,16 +105,10 @@ public class AppLogic {
         
         //Informações do PostgreSQL
         this.psqlInfo();
-        
-        /*PostgreSQL psql = new PostgreSQL();
-        psql.connectToPostgres();
-        psql.runQuery("select * from departamentos;");
-        psql.runQuery("update empregados set salario = 8000 where emp_id = 1;");
-        psql.runQuery("select * from empregados;");*/
     }
     
-    //Checa se um parâmetro é válido
-    private boolean isValid(String[] list, int position, int max) {
+    //Checa se um parâmetro possui dois comandos
+    private boolean isDoubleCommand(String[] list, int position, int max) {
         boolean isLastItem = false;
         
         //Checa se é o último item da lista
@@ -115,21 +120,36 @@ public class AppLogic {
             char checkNext = list[position + 1].charAt(0);
             
             //Checa se o próximo parâmetro não contém hífen no início
-            if(Character.compare(checkNext, '-') != 0)
+            if(Character.compare(checkNext, '-') != 0) {
+                //Parâmetro possui dois comandos
                 return true;
+            }
         }
         
-        //Checa se o parâmetro é para listar comandos ou exibir versão
-        if(list[position].equals("-h") || list[position].equals("-v"))
-            return true;
-        
-        //Parâmetro não é válido
-        System.out.println(this.INCORRECT_USE);
-        System.out.println("Comando: " + list[position]);
-        System.out.println(this.CALL_HELP);
-        System.out.println();
-        
+        //Parâmetro NÃO possui dois comandos
         return false;
+    }
+    
+    //Exibe mensagem de erro para parâmetros inválidos
+    private void invalidParameter(String[] list, int position, boolean doubleArg) {
+        final String INCORRECT_USE = "[AVISO] Parâmetro desconhecido ou uso incorreto!";
+        final String CALL_HELP = "Use [-h] para ver a lista de parâmetros disponíveis.";
+        
+        System.out.println(INCORRECT_USE);
+        
+        //Parâmetro duplo
+        if(doubleArg) {
+            String DOUBLE_COMMAND = "Comando: " + list[position] + " " + list[position + 1];
+            System.out.println(DOUBLE_COMMAND);
+        }
+        //Parâmetro único
+        else {
+            String SOLO_COMMAND = "Comando: " + list[position];
+            System.out.println(SOLO_COMMAND);
+        }
+        
+        System.out.println(CALL_HELP);
+        System.out.println();
     }
     
     //Exibe informações da máquina
