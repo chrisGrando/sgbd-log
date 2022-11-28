@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.projects.araucaria</groupId>
     <artifactId>sgbd-log</artifactId>
-    <version>0.1-ALPHA</version>
+    <version>0.2-ALPHA</version>
     <packaging>jar</packaging>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
