@@ -6,7 +6,7 @@
 *** < https://jdbc.postgresql.org/documentation/query/ >
 *** < https://www.tutorialspoint.com/what-is-the-difference-between-execute-executequery-and-executeupdate-methods-in-jdbc >
 **/
-package sgdb;
+package sgbd;
 
 import globals.PSQL;
 import java.sql.Connection;

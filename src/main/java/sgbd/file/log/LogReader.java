@@ -4,7 +4,7 @@
 *** Referência:
 *** < https://www.javatpoint.com/how-to-read-file-line-by-line-in-java >
 **/
-package sgdb.file.log;
+package sgbd.file.log;
 
 import java.io.FileInputStream;
 import java.io.IOException;

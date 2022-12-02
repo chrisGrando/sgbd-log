@@ -6,7 +6,8 @@ package app;
 
 import globals.AppSystem;
 import globals.PSQL;
-import sgdb.file.log.LogBehavior;
+import sgbd.file.log.LogBehavior;
+import sgbd.PostgreSQL;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.time.format.DateTimeFormatter;
@@ -107,9 +108,14 @@ public class AppLogic {
         //Informações do PostgreSQL
         this.psqlInfo();
         
+        //PSQL
+        PostgreSQL psql = new PostgreSQL();
+        psql.connectToPostgres();
+        
         //Teste de leitura
         LogBehavior lb = new LogBehavior();
         lb.openFile(AppSystem.SGBD_LOG);
+        lb.runLogInterpreter(psql);
     }
     
     //Checa se um parâmetro possui dois comandos

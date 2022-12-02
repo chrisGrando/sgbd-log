@@ -2,7 +2,7 @@
 *** @author chrisGrando
 *** Classe destinada para operações com tabelas obtidas pelo PostgreSQL.
 **/
-package sgdb;
+package sgbd;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

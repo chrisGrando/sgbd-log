@@ -2,9 +2,11 @@
 *** @author chrisGrando
 *** Classe destinada para interpretação e controle do "arquivo de log" do SGBD.
 **/
-package sgdb.file.log;
+package sgbd.file.log;
 
+import sgbd.PostgreSQL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class LogBehavior {
@@ -19,13 +21,80 @@ public class LogBehavior {
         //Converte texto em lista
         String txt = lr.getFileText();
         this.logList = this.makeAnList(txt);
+    }
+    
+    //Interpreta os comandos do arquivo de log
+    public void runLogInterpreter(PostgreSQL psql) {
+        final LogCommands lc = new LogCommands(psql);
         
-        /*for(String[] row : this.logList) {
-            for(String item : row) {
-                System.out.print(item + " | ");
+        System.out.println("*** SGBD LOG ***");
+        
+        //Percorre todas as linhas do arquivo de log
+        for(String[] line : this.logList) {
+            String cmd = line[0];
+            
+            //Verifica o nome do comando
+            switch (cmd) {
+                //Inicia transação
+                case "start":
+                    lc.start(line[1]);
+                    break;
+                //Comita transação
+                case "commit":
+                    lc.commit(line[1]);
+                    break;
+                //Registra checkpoint da transação
+                case "CKPT":
+                    lc.checkpoint(line);
+                    break;
+                //Simula erro no SGBD
+                case "crash":
+                    lc.crash();
+                    break;
+                //Nenhuma das opções acima
+                default:
+                    //Executa transação
+                    if(this.isTransaction(cmd) && line.length > 1)
+                        lc.transaction(line);
+                    //Comando inválido
+                    else {
+                        System.err.println("[AVISO] Comando não reconhecido:");
+                        System.err.println(Arrays.toString(line));
+                        System.err.println();
+                    }
             }
-            System.out.println();
-        }*/
+        }
+    }
+    
+    //Checa se comando é uma transação
+    private boolean isTransaction(String cmd) {
+        int check = 0;
+        
+        //Vasculha todos os caracteres do comando
+        for(char c : cmd.toCharArray()) {
+            //Pula caractere se for espaço em branco
+            if(Character.isWhitespace(c))
+                continue;
+            
+            //Primeiro caractere (letra "T")
+            if(Character.compare(c, 'T') == 0 && check == 0)
+                check++;
+            //Segundo caractere e em diante (número)
+            else if(Character.isDigit(c) && check >= 1)
+                check++;
+            //Não é transação
+            else {
+                check = -1;
+                break;
+            }
+        }
+        
+        //Não é transação
+        if(check < 2)
+            return false;
+        
+        //É transação
+        return true;
     }
     
     //Monta uma lista com os comandos do arquivo lido

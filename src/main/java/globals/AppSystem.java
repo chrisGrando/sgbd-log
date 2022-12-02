@@ -31,7 +31,7 @@ public class AppSystem {
         help += "-table [NOME DA TABELA] -json [TABELA JSON]\n\n";
         
         help += "* Exemplo:\n\n";
-        help += "java -jar sgbd-log.jar -host localhost -port 5432 -database postgres\n\n";
+        help += "java -jar SGBD-log.jar -host localhost -port 5432 -database postgres\n\n";
         
         help += "* Lista de parâmetros:\n\n";
         help += "-v: Exibe a versão do aplicativo e sai\n";
