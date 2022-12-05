@@ -32,56 +32,19 @@
 **/
 package app;
 
-import globals.AppSystem;
-import java.io.PrintStream;
-import java.util.logging.Logger;
-
 public class Main {
 
     public static void main(String[] args)
       throws Exception {
-        //Força saídas de texto para arquivos de log e codificação como UTF-8
-        globalOutput("UTF8");
-        
-        //Modifica Logger global
-        globalLogger("UTF8");
+        //Força codificação como UTF-8 e saídas de texto para arquivos de log
+        SystemEncoding se = new SystemEncoding();
+        se.setConsoleOutput("UTF-8");
+        se.setLoggerOutput("UTF-8");
         
         //Executa aplicativo
         AppLogic app = new AppLogic();
         app.start(args);
         app.execute();
-    }
-    
-    //Altera o método e as codificações das saídas de texto
-    private static void globalOutput(String charset)
-      throws Exception {
-        //Print, Println and Codificações de arquivos
-        System.setOut(new PrintStream(System.out, true, charset));
-        System.setErr(new PrintStream(System.err, true, charset));
-        System.setProperty("file.encoding", charset);
-        
-        //Salva cada print/println em arquivos de log
-        LogOutput logOutput = new LogOutput();
-        logOutput.changeOUT("/output/console.log");
-        logOutput.changeERR("/output/error.log");
-    }
-    
-    //Altera o método e a codificação de texto do Logger global
-    private static void globalLogger(String charset)
-      throws Exception {
-        final Logger myLogger = Logger.getGlobal();
-        
-        //Codificação dos logs
-        String[] charsets = {
-            null,   //Isto é para a saída do CONSOLE
-            charset //Isto é para a saída de ARQUIVO
-        };
-        
-        //Modifica o Logger...
-        LoggerOutput loggerOutput = new LoggerOutput();
-        loggerOutput.replaceRootOutput(myLogger, AppSystem.ERROR_OUTPUT);
-        loggerOutput.addOutput(myLogger, System.err);
-        loggerOutput.setLoggerEncoding(myLogger, charsets);
     }
     
 }

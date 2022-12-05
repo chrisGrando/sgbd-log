@@ -36,12 +36,12 @@ public class AppLogic {
             switch (args[i]) {
                 case "-v":
                     String info = AppSystem.getAppName() + " ~ " + AppSystem.getAppVersion();
-                    AppSystem.CONSOLE_OUTPUT.println(info);
+                    System.out.println(info);
                     System.exit(0);
                     break;
                 case "-h":
                     String help = AppSystem.getHelpText();
-                    AppSystem.CONSOLE_OUTPUT.println(help);
+                    System.out.println(help);
                     System.exit(0);
                     break;
                 case "-host":

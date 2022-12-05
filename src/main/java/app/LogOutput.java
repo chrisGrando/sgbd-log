@@ -15,8 +15,8 @@ public class LogOutput {
     //Saída normal
     public void changeOUT(String path)
       throws Exception {
-        final PrintStream stdout = System.out;
-        AppSystem.CONSOLE_OUTPUT = stdout;
+        AppSystem.CONSOLE_OUTPUT = System.out;
+        final PrintStream stdout = AppSystem.CONSOLE_OUTPUT;
         
         //Diretório do arquivo de texto
         File txtLog = new File(AppSystem.getJarFolder() + path);
@@ -128,8 +128,8 @@ public class LogOutput {
     //Saída de erro
     public void changeERR(String path)
       throws Exception {
-        final PrintStream stderr = System.err;
-        AppSystem.ERROR_OUTPUT = stderr;
+        AppSystem.ERROR_OUTPUT = System.err;
+        final PrintStream stderr = AppSystem.ERROR_OUTPUT;
         
         //Diretório do arquivo de texto
         File txtLog = new File(AppSystem.getJarFolder() + path);
