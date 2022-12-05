@@ -7,6 +7,7 @@ package app;
 import globals.AppSystem;
 import globals.PSQL;
 import sgbd.file.log.LogBehavior;
+import sgbd.file.json.JsonBehavior;
 import sgbd.PostgreSQL;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -112,10 +113,15 @@ public class AppLogic {
         PostgreSQL psql = new PostgreSQL();
         psql.connectToPostgres();
         
-        //Teste de leitura
+        //Teste de leitura (log)
         LogBehavior lb = new LogBehavior();
         lb.openFile(AppSystem.SGBD_LOG);
         lb.runLogInterpreter(psql);
+        
+        //Teste de leitura (json)
+        JsonBehavior jb = new JsonBehavior();
+        jb.openJsonFile(AppSystem.JSON_TABLE);
+        jb.showContents();
     }
     
     //Checa se um parâmetro possui dois comandos

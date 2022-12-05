@@ -64,6 +64,8 @@ public class LogBehavior {
                     }
             }
         }
+        
+        System.out.println();
     }
     
     //Checa se comando é uma transação
@@ -156,12 +158,12 @@ public class LogBehavior {
         return list;
     }
     
-    //Converte lista para vetor
+    //Converte lista de Strings para vetor
     private String[] arrayListToVector(List<String> list) {
         final int size = list.size();
         String[] vector = new String[size];
         
-        //Faz a conversão
+        //Lista (posição 'i') => Vetor [posição 'i']
         for(int i = 0; i < size; i++) {
             vector[i] = list.get(i);
         }
