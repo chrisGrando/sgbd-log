@@ -7,6 +7,8 @@ Trabalho Prático - BDII
 2. [Compilar projeto](#project)
 	+ [Instalar dependências](#install)
 	+ [Abrir & Compilar](#compile)
+3. [Executar](#run)
+4. [Parâmetros de linha de comando](#args)
 
 ## Descrição <a name="about"></a>
 
@@ -44,8 +46,12 @@ Abaixo seguirão as instruções dos softwares e ferramentas necessárias para c
 
 ### Instalar dependências <a name="install"></a>
 
+- [PostgreSQL](https://www.postgresql.org/download/) <br>
+(SGBD usado neste projeto)
+
 - [Liberica JDK 17](https://bell-sw.com/pages/downloads/#/java-17-lts) <br>
 (Versão modificada do Java JDK usada nesse projeto, requer versão 17)
+
 - [Apache NetBeans](https://netbeans.apache.org/download/index.html) <br>
 (IDE usada nesse projeto, requer versão 15 ou superior)
 
@@ -75,3 +81,26 @@ Os arquivos compilados estarão disponíveis na pasta *target*.
 
 > OBS.: Na primeira vez que o software é compilado, o processo pode demorar entre 5 ~ 10 minutos. É necessário ter conexão com
 > a internet somente na primeira vez.
+
+## Executar <a name="run"></a>
+
+- Dentro da IDE: <br>
+Clique no botão ▶️ *Run Project*.
+
+- Na linha de comando (com parâmetros): <br>
+```
+java -jar sgbd-log.jar [-v | -h] -host [NOME DO HOST] -port [NÚMERO DA PORTA] -database [NOME DO BANCO] -user [USUÁRIO] -password [SENHA] -log [SGBD LOG] -table [NOME DA TABELA] -json [TABELA JSON]
+```
+
+## Parâmetros de linha de comando <a name="args"></a>
+
+* -v: Exibe a versão do aplicativo e sai.
+* -h: Exibe esta lista de parâmetros e sai.
+* -host [...]: Nome do host (padrão: localhost).
+* -port [...]: Número da porta (padrão: 5432).
+* -database [...]: Nome do banco de dados (padrão: postgres).
+* -user [...]: Nome de usuário (padrão: postgres).
+* -password [...]: Senha do usuário (padrão: postgres).
+* -log [...]: Diretório do arquivo de log do SGBD.
+* -table [...]: Nome da tabela do SGBD (padrão: homework).
+* -json [...]: Diretório do arquivo JSON da tabela do SGBD.
