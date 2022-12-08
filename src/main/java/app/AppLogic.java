@@ -106,22 +106,28 @@ public class AppLogic {
         //Informações do PC
         this.machineInfo();
         
-        //Informações do PostgreSQL
+        //Variáveis padrões do PostgreSQL
         this.psqlInfo();
         
-        //PSQL
+        //Inicializa e conecta-se ao PostgreSQL
         PostgreSQL psql = new PostgreSQL();
         psql.connectToPostgres();
         
-        //Teste de leitura (log)
-        LogBehavior lb = new LogBehavior();
-        lb.openFile(AppSystem.SGBD_LOG);
-        lb.runLogInterpreter(psql);
-        
-        //Teste de leitura (json)
+        //Obtém dados do arquivo JSON 
         JsonBehavior jb = new JsonBehavior();
         jb.openJsonFile(AppSystem.JSON_TABLE);
-        jb.showContents();
+        jb.showContents(); //Exibe conteúdo do arquivo
+        
+        //Insere dados obtidos no Postgres
+        jb.insertDataIntoPostgres(psql, AppSystem.TABLE_NAME);
+        
+        //Exibe o conteúdo da tabela no Postgres
+        psql.runQuery("select * from " + AppSystem.TABLE_NAME + ";");
+        
+        //Teste de leitura (log)
+        /*LogBehavior lb = new LogBehavior();
+        lb.openFile(AppSystem.SGBD_LOG);
+        lb.runLogInterpreter(psql);*/
     }
     
     //Checa se um parâmetro possui dois comandos
