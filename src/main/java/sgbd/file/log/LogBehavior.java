@@ -24,8 +24,8 @@ public class LogBehavior {
     }
     
     //Interpreta os comandos do arquivo de log
-    public void runLogInterpreter(PostgreSQL psql) {
-        final LogCommands lc = new LogCommands(psql);
+    public void runLogInterpreter(PostgreSQL psql, String tableName) {
+        final LogCommands lc = new LogCommands(psql, tableName);
         
         System.out.println("*** SGBD LOG ***");
         
@@ -112,6 +112,7 @@ public class LogBehavior {
             if(Character.compare(c, '<') == 0) {
                 if(!line.isEmpty())
                     line.clear();
+                
                 continue;
             }
             
@@ -128,6 +129,7 @@ public class LogBehavior {
                     String[] newLine = this.arrayListToVector(line);
                     list.add(newLine);
                 }
+                
                 continue;
             }
             
@@ -147,6 +149,7 @@ public class LogBehavior {
                         line.add(element);
                         element = "";
                     }
+                    
                     continue;
                 }
             }

@@ -116,7 +116,8 @@ public class AppLogic {
         //Obtém dados do arquivo JSON 
         JsonBehavior jb = new JsonBehavior();
         jb.openJsonFile(AppSystem.JSON_TABLE);
-        jb.showContents(); //Exibe conteúdo do arquivo
+        //Exibe conteúdo do arquivo
+        System.out.println(jb.showContents());
         
         //Insere dados obtidos no Postgres
         jb.insertDataIntoPostgres(psql, AppSystem.TABLE_NAME);
@@ -125,9 +126,9 @@ public class AppLogic {
         psql.runQuery("select * from " + AppSystem.TABLE_NAME + ";");
         
         //Teste de leitura (log)
-        /*LogBehavior lb = new LogBehavior();
+        LogBehavior lb = new LogBehavior();
         lb.openFile(AppSystem.SGBD_LOG);
-        lb.runLogInterpreter(psql);*/
+        lb.runLogInterpreter(psql, AppSystem.TABLE_NAME);
     }
     
     //Checa se um parâmetro possui dois comandos

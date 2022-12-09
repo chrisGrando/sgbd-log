@@ -20,13 +20,16 @@ public class JsonBehavior {
     }
     
     //Exibe o conteúdo lido do arquivo Json
-    public void showContents() {
+    public String showContents() {
+        String contents = "";
         TableBehavior tb = new TableBehavior();
         List<String[]> ls = tb.convertTableToString(this.fileContents);
         
-        System.out.println("*** JSON ***");
-        System.out.println(tb.showAllData(ls));
-        System.out.println();
+        //Conteúdo do arquivo
+        contents += "*** JSON ***\n";
+        contents += tb.showAllData(ls);
+        
+        return contents;
     }
     
     //Insere os dados do arquivo JSON no SGBD
@@ -43,12 +46,12 @@ public class JsonBehavior {
         }
         
         //Inicia SQL da criação da tabela
-        createTable = "create table " + tableName + "(\n";
+        createTable = "create table " + tableName + "(\n    ";
         createTable += "id serial primary key";
         
         //Inclui colunas na tabela
         for(String item: columns) {
-            createTable += ",\n" + item + " integer";
+            createTable += ",\n    " + item + " integer";
         }
         
         //Encerra SQL da criação da tabela
