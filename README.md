@@ -38,7 +38,8 @@ Para uma descrição mais detalhada, leia o arquivo [Projeto.pdf](https://github
 (✅) Ler arquivo JSON (metadado.json). <br>
 (✅) Conectar-se ao PostgreSQL. <br>
 (✅) Criar tabela com os dados do arquivo JSON no SGBD. <br>
-(❌) Simular operação de "REDO" no SGBD.
+(✅) Simular operação de "REDO" no SGBD. <br>
+(❌) Interface gráfica.
 
 ## Compilar projeto <a name="project"></a>
 
