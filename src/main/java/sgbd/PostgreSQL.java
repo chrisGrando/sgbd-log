@@ -89,7 +89,7 @@ public class PostgreSQL {
 
                 //Exibe output do query
                 System.out.println("*** QUERY ***");
-                System.out.println(tb.showAllData(strQuery));
+                System.out.print(tb.showAllData(strQuery));
                 System.out.println();
             }
             //Sem retorno

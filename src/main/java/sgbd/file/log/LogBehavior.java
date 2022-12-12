@@ -45,7 +45,7 @@ public class LogBehavior {
                     break;
                 //Registra checkpoint da transação
                 case "CKPT":
-                    lc.checkpoint(line);
+                    lc.checkpoint(line[1]);
                     break;
                 //Simula erro no SGBD
                 case "crash":
@@ -64,8 +64,6 @@ public class LogBehavior {
                     }
             }
         }
-        
-        System.out.println();
     }
     
     //Checa se comando é uma transação

@@ -116,6 +116,7 @@ public class AppLogic {
         //Obtém dados do arquivo JSON 
         JsonBehavior jb = new JsonBehavior();
         jb.openJsonFile(AppSystem.JSON_TABLE);
+        
         //Exibe conteúdo do arquivo
         System.out.println(jb.showContents());
         
@@ -125,10 +126,13 @@ public class AppLogic {
         //Exibe o conteúdo da tabela no Postgres
         psql.runQuery("select * from " + AppSystem.TABLE_NAME + ";");
         
-        //Teste de leitura (log)
+        //Simula a execução dos comandos do arquivo de log do SGBD
         LogBehavior lb = new LogBehavior();
         lb.openFile(AppSystem.SGBD_LOG);
         lb.runLogInterpreter(psql, AppSystem.TABLE_NAME);
+        
+        //Exibe a tabela no Postgres após a execução da simulação
+        psql.runQuery("select * from " + AppSystem.TABLE_NAME + ";");
     }
     
     //Checa se um parâmetro possui dois comandos
