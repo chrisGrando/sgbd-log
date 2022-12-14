@@ -132,7 +132,7 @@ public class AppLogic {
         lb.runLogInterpreter(psql, AppSystem.TABLE_NAME);
         
         //Exibe a tabela no Postgres após a execução da simulação
-        psql.runQuery("select * from " + AppSystem.TABLE_NAME + ";");
+        psql.runQuery("select * from " + AppSystem.TABLE_NAME + " order by id asc;");
     }
     
     //Checa se um parâmetro possui dois comandos

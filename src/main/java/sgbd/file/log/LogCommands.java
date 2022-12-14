@@ -14,7 +14,6 @@ public class LogCommands {
     private final List<String> activeTransactions;
     private final List<String[]> transactionsData;
     private final List<String> checkpointFlag;
-    private int checkpointIndex = -1;
     
     //Construtor
     public LogCommands(PostgreSQL psql, String tableName) {
@@ -87,10 +86,9 @@ public class LogCommands {
         }
     }
     
-    //Registra checkpoint da transação
+    //Registra checkpoint das transações
     public void checkpoint(String op) {
         String[] list = this.generateCheckpointList(op);
-        this.checkpointIndex = this.activeTransactions.size() - 1;
         
         //Processa todos os itens da lista
         for(String item : list) {
@@ -116,25 +114,26 @@ public class LogCommands {
     public void crash() {
         System.out.println("*** CRASH! ***");
         
-        //Refaz as transações que não foram marcadas pelo checkpoint e foram comitadas
+        //Refaz as transações que foram marcadas pelo checkpoint e foram comitadas
         for(int i = 0; i < this.transactionsData.size(); i++) {
             String[] row = this.transactionsData.get(i);
             
-            //Pula se foi marcada pelo checkpoint
-            if(this.checkpointFlag.contains(row[0]) && i < this.checkpointIndex) {
-                System.out.println("Transação <" + row[0] + "> não sofreu REDO\n");
-                continue;
+            //Checa se foi marcada pelo checkpoint
+            if(this.checkpointFlag.contains(row[0])) {
+                //Checa se a transação foi comitada
+                if(this.activeTransactions.indexOf(row[0]) < 0) {
+                    System.out.println("Transação <" + row[0] + "> sofreu REDO\n");
+                    this.writeIntoPostgres(row);
+                }
+                //Transação não foi comitada
+                else {
+                    System.out.println("Transação <" + row[0] + "> não sofreu REDO\n");
+                }
             }
-            
-            //Checa se a transação foi comitada
-            if(this.activeTransactions.indexOf(row[0]) < 0) {
-                //Refaz transação
-                System.out.println("Transação <" + row[0] + "> sofreu REDO\n");
-                this.writeIntoPostgres(row);
-            }
-            //Transação não foi comitada
-            else
+            //Transação não foi marcada pelo checkpoint
+            else {
                 System.out.println("Transação <" + row[0] + "> não sofreu REDO\n");
+            }
         }
     }
     
