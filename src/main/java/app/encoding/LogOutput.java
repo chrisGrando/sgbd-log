@@ -2,7 +2,7 @@
 *** @author chrisGrando
 *** Classe destinada para gravar cada print/println em arquivos de log.
 **/
-package app;
+package app.encoding;
 
 import globals.AppSystem;
 import java.io.File;

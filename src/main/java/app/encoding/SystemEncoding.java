@@ -3,7 +3,7 @@
 *** Classe destinada para alterar a codificação, métodos de saída de texto do
 *** console/terminal e dos arquivos.
 **/
-package app;
+package app.encoding;
 
 import globals.AppSystem;
 import java.io.PrintStream;

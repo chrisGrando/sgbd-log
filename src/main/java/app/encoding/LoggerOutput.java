@@ -2,7 +2,7 @@
 *** @author chrisGrando
 *** Classe destinada a substituir os métodos de saída do Logger.
 **/
-package app;
+package app.encoding;
 
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;

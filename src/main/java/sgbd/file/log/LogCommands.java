@@ -56,12 +56,10 @@ public class LogCommands {
     //Comita transação
     public void commit(String op) {
         final int activeIndex = this.activeTransactions.indexOf(op);
-        List<String[]> aux = new ArrayList<>();
         
         //Obtém todas as transações
-        for(String[] row : this.transactionsData) {
-            aux.add(row);
-        }
+        List<String[]> aux = new ArrayList<>();
+        aux.addAll(this.transactionsData);
         
         //Checa se a transação está ativa
         if(activeIndex > -1) {

@@ -32,6 +32,8 @@
 **/
 package app;
 
+import app.encoding.SystemEncoding;
+
 public class Main {
 
     public static void main(String[] args)
