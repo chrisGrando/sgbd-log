@@ -191,8 +191,12 @@ public class AppLogic {
         System.out.println("SO: " + osName + " | " + osArch + " | " + osVersion);
         
         //Charset local do sistema
-        String sysLang = Locale.getDefault().getDisplayLanguage(Locale.ENGLISH);
-        String sysCharset = Charset.defaultCharset().displayName(Locale.ENGLISH);
+        String sysLang = Locale.getDefault()
+            .getDisplayLanguage(Locale.forLanguageTag("pt-br"))
+            .toUpperCase();
+        String sysCharset = Charset.defaultCharset()
+            .displayName(Locale.ENGLISH)
+            .toUpperCase();
         System.out.println("Charset: " + sysLang + " | " + sysCharset);
         
         //Data e Hora

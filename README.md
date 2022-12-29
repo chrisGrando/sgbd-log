@@ -80,8 +80,8 @@ e aguarde.
 Se a compilação for bem sucedida, então o projeto já está corretamente configurado e pronto para usar.<br>
 Os arquivos compilados estarão disponíveis na pasta *target*.
 
-> OBS.: Na primeira vez que o software é compilado, o processo pode demorar entre 5 ~ 10 minutos. É necessário ter conexão com
-> a internet somente na primeira vez.
+> OBS.: Na primeira vez que o software é compilado, o processo pode demorar entre 5 ~ 10 minutos.
+> É necessário ter conexão com a internet.
 
 ## Executar <a name="run"></a>
 

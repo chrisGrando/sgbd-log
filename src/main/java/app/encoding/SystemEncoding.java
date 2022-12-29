@@ -36,8 +36,8 @@ public class SystemEncoding {
         
         //Salva cada print/println em arquivos de log
         LogOutput logOutput = new LogOutput();
-        logOutput.changeOUT("/output/console.log");
-        logOutput.changeERR("/output/error.log");
+        logOutput.changeOUT(AppSystem.CONSOLE_FILE);
+        logOutput.changeERR(AppSystem.ERROR_FILE);
     }
     
     //Altera o método e a codificação de texto do Logger global

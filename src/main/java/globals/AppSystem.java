@@ -14,6 +14,10 @@ public class AppSystem {
     public static PrintStream CONSOLE_OUTPUT = null;
     public static PrintStream ERROR_OUTPUT = null;
     
+    //Diretório dos arquivos de log dos consoles
+    public static String CONSOLE_FILE = "/output/console.log";
+    public static String ERROR_FILE = "/output/error.log";
+    
     //Arquivo de log do SGBD
     public static String SGBD_LOG = null;
     
@@ -55,7 +59,7 @@ public class AppSystem {
         
         //Diretório da classe AppSystem
         File classFileDir = new File(
-          AppSystem.class.getProtectionDomain().getCodeSource().getLocation().toURI()
+        AppSystem.class.getProtectionDomain().getCodeSource().getLocation().toURI()
         );
         
         /*

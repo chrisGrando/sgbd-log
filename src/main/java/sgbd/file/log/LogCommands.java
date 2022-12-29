@@ -133,6 +133,9 @@ public class LogCommands {
                 System.out.println("Transação <" + row[0] + "> não sofreu REDO\n");
             }
         }
+        
+        //Limpa a lista de checkpoints
+        this.checkpointFlag.clear();
     }
     
     //Gera lista de transações para marcar no checkpoint
