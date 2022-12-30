@@ -4,6 +4,7 @@
 **/
 package app;
 
+import app.gui.MainWindow;
 import globals.AppSystem;
 import globals.PSQL;
 import sgbd.file.log.LogBehavior;
@@ -43,6 +44,9 @@ public class AppLogic {
                     String help = AppSystem.getHelpText();
                     System.out.println(help);
                     System.exit(0);
+                    break;
+                case "-gui":
+                    AppSystem.GUI = true;
                     break;
                 case "-host":
                     if(this.isDoubleCommand(args, i, size))
@@ -109,30 +113,38 @@ public class AppLogic {
         //Variáveis padrões do PostgreSQL
         this.psqlInfo();
         
-        //Inicializa e conecta-se ao PostgreSQL
-        PostgreSQL psql = new PostgreSQL();
-        psql.connectToPostgres();
-        
-        //Obtém dados do arquivo JSON 
-        JsonBehavior jb = new JsonBehavior();
-        jb.openJsonFile(AppSystem.JSON_TABLE);
-        
-        //Exibe conteúdo do arquivo
-        System.out.println(jb.showContents());
-        
-        //Insere dados obtidos no Postgres
-        jb.insertDataIntoPostgres(psql, AppSystem.TABLE_NAME);
-        
-        //Exibe o conteúdo da tabela no Postgres
-        psql.runQuery("select * from " + AppSystem.TABLE_NAME + ";");
-        
-        //Simula a execução dos comandos do arquivo de log do SGBD
-        LogBehavior lb = new LogBehavior();
-        lb.openFile(AppSystem.SGBD_LOG);
-        lb.runLogInterpreter(psql, AppSystem.TABLE_NAME);
-        
-        //Exibe a tabela no Postgres após a execução da simulação
-        psql.runQuery("select * from " + AppSystem.TABLE_NAME + " order by id asc;");
+        //Modo de interface gráfica
+        if(AppSystem.GUI) {
+            MainWindow mw = new MainWindow();
+            mw.start();
+        }
+        //Modo de linha de comando
+        else {
+            //Inicializa e conecta-se ao PostgreSQL
+            PostgreSQL psql = new PostgreSQL();
+            psql.connectToPostgres();
+
+            //Obtém dados do arquivo JSON 
+            JsonBehavior jb = new JsonBehavior();
+            jb.openJsonFile(AppSystem.JSON_TABLE);
+
+            //Exibe conteúdo do arquivo
+            System.out.println(jb.showContents());
+
+            //Insere dados obtidos no Postgres
+            jb.insertDataIntoPostgres(psql, AppSystem.TABLE_NAME);
+
+            //Exibe o conteúdo da tabela no Postgres
+            psql.runQuery("select * from " + AppSystem.TABLE_NAME + ";");
+
+            //Simula a execução dos comandos do arquivo de log do SGBD
+            LogBehavior lb = new LogBehavior();
+            lb.openFile(AppSystem.SGBD_LOG);
+            lb.runLogInterpreter(psql, AppSystem.TABLE_NAME);
+
+            //Exibe a tabela no Postgres após a execução da simulação
+            psql.runQuery("select * from " + AppSystem.TABLE_NAME + " order by id asc;");
+        }
     }
     
     //Checa se um parâmetro possui dois comandos

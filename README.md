@@ -93,10 +93,16 @@ Clique no botão ▶️ *Run Project*.
 java -jar sgbd-log.jar [-v | -h] -host [NOME DO HOST] -port [NÚMERO DA PORTA] -database [NOME DO BANCO] -user [USUÁRIO] -password [SENHA] -log [SGBD LOG] -table [NOME DA TABELA] -json [TABELA JSON]
 ```
 
+Exemplo:
+```
+java -jar sgbd-log.jar -database tp2 -log database/entrada_log.txt -json database/metadado.json
+```
+
 ## Parâmetros de linha de comando <a name="args"></a>
 
 * -v: Exibe a versão do aplicativo e sai.
 * -h: Exibe esta lista de parâmetros e sai.
+* -gui: Ativa o modo de interface gráfica.
 * -host [...]: Nome do host (padrão: localhost).
 * -port [...]: Número da porta (padrão: 5432).
 * -database [...]: Nome do banco de dados (padrão: postgres).
