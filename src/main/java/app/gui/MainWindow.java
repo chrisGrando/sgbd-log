@@ -6,13 +6,22 @@
 **/
 package app.gui;
 
+import globals.*;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import sgbd.PostgreSQL;
+
 public class MainWindow extends javax.swing.JFrame {
+    private final PostgreSQL psql;
+    private String previousConsoleText = "";
 
     //Construtor
     public MainWindow() {
         initComponents();
         setCenter();
         //setIcon();
+        psql = new PostgreSQL();
     }
 
     /**
@@ -24,17 +33,29 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane_Main = new javax.swing.JTabbedPane();
-        jTabbedPane_PSQL = new javax.swing.JTabbedPane();
-        jTabbedPane_LOG = new javax.swing.JTabbedPane();
-        jTabbedPane_QUERY = new javax.swing.JTabbedPane();
+        jTabbedPane = new javax.swing.JTabbedPane();
+        Tab_PSQL = new javax.swing.JPanel();
+        jLabel_Host = new javax.swing.JLabel();
+        jLabel_Port = new javax.swing.JLabel();
+        jLabel_Database = new javax.swing.JLabel();
+        jLabel_User = new javax.swing.JLabel();
+        jLabel_Password = new javax.swing.JLabel();
+        jTextField_Host = new javax.swing.JTextField();
+        jTextField_Port = new javax.swing.JTextField();
+        jTextField_Database = new javax.swing.JTextField();
+        jTextField_User = new javax.swing.JTextField();
+        jPasswordField_DB = new javax.swing.JPasswordField();
+        jButton_ConnectDB = new javax.swing.JButton();
+        jButton_CreateDB = new javax.swing.JButton();
+        Tab_LOG = new javax.swing.JPanel();
+        Tab_QUERY = new javax.swing.JPanel();
         jScrollPane_Console = new javax.swing.JScrollPane();
         jTextArea_Console = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SGBD LOG");
+        setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(640, 480));
-        setPreferredSize(new java.awt.Dimension(800, 600));
         setSize(new java.awt.Dimension(640, 480));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
@@ -42,21 +63,170 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        jTabbedPane_Main.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTabbedPane_Main.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        jTabbedPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        jTabbedPane_PSQL.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jTabbedPane_Main.addTab("PSQL", jTabbedPane_PSQL);
-        jTabbedPane_Main.addTab("LOG", jTabbedPane_LOG);
-        jTabbedPane_Main.addTab("QUERY", jTabbedPane_QUERY);
+        Tab_PSQL.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jScrollPane_Console.setBorder(javax.swing.BorderFactory.createTitledBorder(null, " CONSOLE ", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Monospaced", 2, 12), new java.awt.Color(102, 102, 102))); // NOI18N
+        jLabel_Host.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jLabel_Host.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel_Host.setText("Host");
+        jLabel_Host.setToolTipText("");
+
+        jLabel_Port.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jLabel_Port.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel_Port.setText("Port");
+        jLabel_Port.setToolTipText("");
+
+        jLabel_Database.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jLabel_Database.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel_Database.setText("Database");
+        jLabel_Database.setToolTipText("");
+
+        jLabel_User.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jLabel_User.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel_User.setText("Usuário");
+        jLabel_User.setToolTipText("");
+
+        jLabel_Password.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jLabel_Password.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel_Password.setText("Senha");
+        jLabel_Password.setToolTipText("");
+
+        jTextField_Host.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+
+        jTextField_Port.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+
+        jTextField_Database.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+
+        jTextField_User.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+
+        jPasswordField_DB.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jPasswordField_DB.setEchoChar('\u00f8');
+
+        jButton_ConnectDB.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jButton_ConnectDB.setText("Conectar-se ao PostgreSQL");
+        jButton_ConnectDB.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_ConnectDB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onConnectButtonClicked(evt);
+            }
+        });
+
+        jButton_CreateDB.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jButton_CreateDB.setText("Criar nova DATABASE e conectar");
+        jButton_CreateDB.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_CreateDB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onCreateButtonClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout Tab_PSQLLayout = new javax.swing.GroupLayout(Tab_PSQL);
+        Tab_PSQL.setLayout(Tab_PSQLLayout);
+        Tab_PSQLLayout.setHorizontalGroup(
+            Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Tab_PSQLLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(Tab_PSQLLayout.createSequentialGroup()
+                        .addComponent(jLabel_Password)
+                        .addGroup(Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(Tab_PSQLLayout.createSequentialGroup()
+                                .addGap(35, 35, 35)
+                                .addComponent(jButton_ConnectDB, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
+                                .addGap(33, 33, 33)
+                                .addComponent(jButton_CreateDB, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
+                                .addGap(75, 75, 75))
+                            .addGroup(Tab_PSQLLayout.createSequentialGroup()
+                                .addGap(38, 38, 38)
+                                .addComponent(jPasswordField_DB))))
+                    .addGroup(Tab_PSQLLayout.createSequentialGroup()
+                        .addGroup(Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel_Database)
+                            .addComponent(jLabel_Port)
+                            .addComponent(jLabel_User)
+                            .addComponent(jLabel_Host))
+                        .addGap(18, 18, 18)
+                        .addGroup(Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField_Host)
+                            .addComponent(jTextField_User)
+                            .addComponent(jTextField_Port)
+                            .addComponent(jTextField_Database))))
+                .addContainerGap())
+        );
+        Tab_PSQLLayout.setVerticalGroup(
+            Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Tab_PSQLLayout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addGroup(Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_Host)
+                    .addComponent(jTextField_Host, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_Port)
+                    .addComponent(jTextField_Port, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_Database)
+                    .addComponent(jTextField_Database, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addGroup(Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_User)
+                    .addComponent(jTextField_User, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
+                .addGroup(Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_Password)
+                    .addComponent(jPasswordField_DB, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
+                .addGroup(Tab_PSQLLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton_ConnectDB, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_CreateDB, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25))
+        );
+
+        jTabbedPane.addTab("PSQL", Tab_PSQL);
+
+        Tab_LOG.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout Tab_LOGLayout = new javax.swing.GroupLayout(Tab_LOG);
+        Tab_LOG.setLayout(Tab_LOGLayout);
+        Tab_LOGLayout.setHorizontalGroup(
+            Tab_LOGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 786, Short.MAX_VALUE)
+        );
+        Tab_LOGLayout.setVerticalGroup(
+            Tab_LOGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 412, Short.MAX_VALUE)
+        );
+
+        jTabbedPane.addTab("LOG", Tab_LOG);
+
+        Tab_QUERY.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout Tab_QUERYLayout = new javax.swing.GroupLayout(Tab_QUERY);
+        Tab_QUERY.setLayout(Tab_QUERYLayout);
+        Tab_QUERYLayout.setHorizontalGroup(
+            Tab_QUERYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 786, Short.MAX_VALUE)
+        );
+        Tab_QUERYLayout.setVerticalGroup(
+            Tab_QUERYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 412, Short.MAX_VALUE)
+        );
+
+        jTabbedPane.addTab("QUERY", Tab_QUERY);
+
+        jScrollPane_Console.setBackground(new java.awt.Color(242, 242, 242));
+        jScrollPane_Console.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(153, 153, 153), 1, true), " CONSOLE ", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Monospaced", 2, 12))); // NOI18N
 
         jTextArea_Console.setEditable(false);
         jTextArea_Console.setColumns(20);
         jTextArea_Console.setFont(new java.awt.Font("Monospaced", 0, 12)); // NOI18N
         jTextArea_Console.setRows(5);
+        jTextArea_Console.setBorder(null);
         jTextArea_Console.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jTextArea_Console.setMargin(new java.awt.Insets(0, 0, 0, 0));
         jScrollPane_Console.setViewportView(jTextArea_Console);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -66,31 +236,120 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTabbedPane_Main)
-                    .addComponent(jScrollPane_Console, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE))
+                    .addComponent(jTabbedPane)
+                    .addComponent(jScrollPane_Console))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane_Main, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+                .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane_Console, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                .addComponent(jScrollPane_Console, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
-        jTabbedPane_Main.getAccessibleContext().setAccessibleName("");
+        jTabbedPane.getAccessibleContext().setAccessibleName("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     //Executa ao abrir a janela
     private void onWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_onWindowOpened
-        System.out.println("*** GUI ***");
-        System.out.println(evt.paramString());
+        this.printEvent(evt.paramString());
+        
+        //Inicializa os campos da aba "PSQL"
+        jTextField_Host.setText(PSQL.HOST);
+        jTextField_Port.setText(PSQL.PORT);
+        jTextField_Database.setText(PSQL.DATABASE);
+        jTextField_User.setText(PSQL.USER);
+        jPasswordField_DB.setText(PSQL.PASSWORD);
+        
+        //Atualiza console
+        this.updateConsole();
     }//GEN-LAST:event_onWindowOpened
 
+    //Conecta-se ao PostgreSQL em uma database já existente
+    private void onConnectButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onConnectButtonClicked
+        this.printEvent(evt.paramString());
+        
+        //Configura os dados do PSQL
+        psql.setHostWithPort(jTextField_Host.getText(), jTextField_Port.getText());
+        psql.setDatabase(jTextField_Database.getText());
+        psql.setUserWithPassword(jTextField_User.getText(), new String(jPasswordField_DB.getPassword()));
+        psql.generateURL();
+        
+        //Realiza a conexão
+        psql.connectToPostgres();
+        
+        //Atualiza console
+        this.updateConsole();
+    }//GEN-LAST:event_onConnectButtonClicked
+
+    //Cria uma nova database no PostgreSQL e se conecta nela
+    private void onCreateButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onCreateButtonClicked
+        this.printEvent(evt.paramString());
+        String db = jTextField_Database.getText();
+        
+        //Configura os dados do PSQL
+        psql.setHostWithPort(jTextField_Host.getText(), jTextField_Port.getText());
+        psql.setDatabase("postgres"); //Database padrão
+        psql.setUserWithPassword(jTextField_User.getText(), new String(jPasswordField_DB.getPassword()));
+        psql.generateURL();
+        
+        //Temporariamente conecta-se na database padrão
+        psql.connectToPostgres();
+        
+        //Cria nova database
+        psql.runQuery("drop database if exists " + db + ";");
+        psql.runQuery("create database " + db + ";");
+        
+        //Conecta-se na nova database
+        psql.setDatabase(db);
+        psql.generateURL();
+        psql.connectToPostgres();
+        
+        //Atualiza console
+        this.updateConsole();
+    }//GEN-LAST:event_onCreateButtonClicked
+
+    //Notificação de evento na janela gráfica
+    private void printEvent(String event) {
+        System.out.println("*** GUI ***");
+        System.out.println(event);
+        System.out.println();
+    }
+    
+    //Atualiza o texto do console da janela
+    private void updateConsole() {
+        String currentConsoleText;
+        String consolePath;
+        
+        //Diretório do arquivo do console
+        try {
+            consolePath = AppSystem.getJarFolder() + AppSystem.CONSOLE_FILE;
+        }
+        catch (URISyntaxException error) {
+            String msg = "[AVISO] Não foi possível obter o diretório do console...";
+            Logger.getGlobal().log(Level.WARNING, msg, error);
+            consolePath = System.getProperty("user.dir") + AppSystem.CONSOLE_FILE;
+        }
+        
+        //Lê arquivo do console
+        ConsoleReader cr = new ConsoleReader();
+        cr.read(consolePath);
+        
+        //Obtém a(s) última(s) linha(s) adicionada(s) no arquivo do console
+        currentConsoleText = cr.getText().replace(this.previousConsoleText, "");
+        
+        //Exibe o texto no console da janela
+        jTextArea_Console.append(currentConsoleText);
+        
+        //Atualiza variável
+        this.previousConsoleText = jTextArea_Console.getText();
+    }
+    
     /*
     //Exibe o ícone do aplicativo
     private void setIcon() {
@@ -135,11 +394,23 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel Tab_LOG;
+    private javax.swing.JPanel Tab_PSQL;
+    private javax.swing.JPanel Tab_QUERY;
+    private javax.swing.JButton jButton_ConnectDB;
+    private javax.swing.JButton jButton_CreateDB;
+    private javax.swing.JLabel jLabel_Database;
+    private javax.swing.JLabel jLabel_Host;
+    private javax.swing.JLabel jLabel_Password;
+    private javax.swing.JLabel jLabel_Port;
+    private javax.swing.JLabel jLabel_User;
+    private javax.swing.JPasswordField jPasswordField_DB;
     private javax.swing.JScrollPane jScrollPane_Console;
-    private javax.swing.JTabbedPane jTabbedPane_LOG;
-    private javax.swing.JTabbedPane jTabbedPane_Main;
-    private javax.swing.JTabbedPane jTabbedPane_PSQL;
-    private javax.swing.JTabbedPane jTabbedPane_QUERY;
+    private javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JTextArea jTextArea_Console;
+    private javax.swing.JTextField jTextField_Database;
+    private javax.swing.JTextField jTextField_Host;
+    private javax.swing.JTextField jTextField_Port;
+    private javax.swing.JTextField jTextField_User;
     // End of variables declaration//GEN-END:variables
 }
