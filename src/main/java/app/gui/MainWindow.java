@@ -7,10 +7,15 @@
 package app.gui;
 
 import globals.*;
+import app.gui.filter.*;
+import java.io.File;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import sgbd.PostgreSQL;
+import sgbd.file.json.JsonBehavior;
+import sgbd.file.log.LogBehavior;
 
 public class MainWindow extends javax.swing.JFrame {
     private final PostgreSQL psql;
@@ -33,6 +38,8 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFileChooser_JSON = new javax.swing.JFileChooser();
+        jFileChooser_LOG = new javax.swing.JFileChooser();
         jTabbedPane = new javax.swing.JTabbedPane();
         Tab_PSQL = new javax.swing.JPanel();
         jLabel_Host = new javax.swing.JLabel();
@@ -48,9 +55,28 @@ public class MainWindow extends javax.swing.JFrame {
         jButton_ConnectDB = new javax.swing.JButton();
         jButton_CreateDB = new javax.swing.JButton();
         Tab_LOG = new javax.swing.JPanel();
+        jLabel_TableName = new javax.swing.JLabel();
+        jLabel_JsonFile = new javax.swing.JLabel();
+        jLabel_LogFile = new javax.swing.JLabel();
+        jTextField_TableName = new javax.swing.JTextField();
+        jTextField_JsonFile = new javax.swing.JTextField();
+        jTextField_LogFile = new javax.swing.JTextField();
+        jButton_JsonFile = new javax.swing.JButton();
+        jButton_LogFile = new javax.swing.JButton();
+        jButton_Simulation = new javax.swing.JButton();
         Tab_QUERY = new javax.swing.JPanel();
         jScrollPane_Console = new javax.swing.JScrollPane();
         jTextArea_Console = new javax.swing.JTextArea();
+
+        jFileChooser_JSON.setCurrentDirectory(null);
+        jFileChooser_JSON.setDialogTitle("Abrir arquivo de metadado (JSON)");
+        jFileChooser_JSON.setFileFilter(new JsonFileFilter());
+        jFileChooser_JSON.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+
+        jFileChooser_LOG.setCurrentDirectory(null);
+        jFileChooser_LOG.setDialogTitle("Abrir arquivo de LOG do SGBD");
+        jFileChooser_LOG.setFileFilter(new LogFileFilter());
+        jFileChooser_LOG.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SGBD LOG");
@@ -189,15 +215,90 @@ public class MainWindow extends javax.swing.JFrame {
 
         Tab_LOG.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jLabel_TableName.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jLabel_TableName.setText("Nome da tabela");
+
+        jLabel_JsonFile.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jLabel_JsonFile.setText("Arquivo JSON");
+
+        jLabel_LogFile.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jLabel_LogFile.setText("Arquivo de LOG");
+
+        jTextField_TableName.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+
+        jTextField_JsonFile.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+
+        jTextField_LogFile.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+
+        jButton_JsonFile.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
+        jButton_JsonFile.setText("...");
+        jButton_JsonFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onButtonJsonClicked(evt);
+            }
+        });
+
+        jButton_LogFile.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
+        jButton_LogFile.setText("...");
+        jButton_LogFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onButtonLogClicked(evt);
+            }
+        });
+
+        jButton_Simulation.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jButton_Simulation.setText("Executar simulação");
+        jButton_Simulation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onButtonSimulationClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout Tab_LOGLayout = new javax.swing.GroupLayout(Tab_LOG);
         Tab_LOG.setLayout(Tab_LOGLayout);
         Tab_LOGLayout.setHorizontalGroup(
             Tab_LOGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 786, Short.MAX_VALUE)
+            .addGroup(Tab_LOGLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(Tab_LOGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel_LogFile)
+                    .addComponent(jLabel_JsonFile)
+                    .addComponent(jLabel_TableName))
+                .addGap(18, 18, 18)
+                .addGroup(Tab_LOGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextField_TableName)
+                    .addComponent(jTextField_JsonFile, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
+                    .addComponent(jTextField_LogFile, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(Tab_LOGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton_JsonFile, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_LogFile, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(15, 15, 15))
+            .addGroup(Tab_LOGLayout.createSequentialGroup()
+                .addGap(268, 268, 268)
+                .addComponent(jButton_Simulation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(268, 268, 268))
         );
         Tab_LOGLayout.setVerticalGroup(
             Tab_LOGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 412, Short.MAX_VALUE)
+            .addGroup(Tab_LOGLayout.createSequentialGroup()
+                .addGap(70, 70, 70)
+                .addGroup(Tab_LOGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_TableName)
+                    .addComponent(jTextField_TableName, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
+                .addGroup(Tab_LOGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_JsonFile)
+                    .addComponent(jTextField_JsonFile, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_JsonFile, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
+                .addGroup(Tab_LOGLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel_LogFile)
+                    .addComponent(jTextField_LogFile, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton_LogFile, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addComponent(jButton_Simulation, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70))
         );
 
         jTabbedPane.addTab("LOG", Tab_LOG);
@@ -212,7 +313,7 @@ public class MainWindow extends javax.swing.JFrame {
         );
         Tab_QUERYLayout.setVerticalGroup(
             Tab_QUERYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 412, Short.MAX_VALUE)
+            .addGap(0, 418, Short.MAX_VALUE)
         );
 
         jTabbedPane.addTab("QUERY", Tab_QUERY);
@@ -246,7 +347,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane_Console, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                .addComponent(jScrollPane_Console, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -257,7 +358,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     //Executa ao abrir a janela
     private void onWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_onWindowOpened
-        this.printEvent(evt.paramString());
+        String defaultPath;
         
         //Inicializa os campos da aba "PSQL"
         jTextField_Host.setText(PSQL.HOST);
@@ -266,7 +367,27 @@ public class MainWindow extends javax.swing.JFrame {
         jTextField_User.setText(PSQL.USER);
         jPasswordField_DB.setText(PSQL.PASSWORD);
         
+        //Inicializa os campos da aba "LOG"
+        jTextField_TableName.setText(AppSystem.TABLE_NAME);
+        jTextField_JsonFile.setText(AppSystem.JSON_TABLE);
+        jTextField_LogFile.setText(AppSystem.SGBD_LOG);
+        
+        //Diretório padrão para abrir arquivos
+        try {
+            defaultPath = AppSystem.getJarFolder();
+        }
+        catch (URISyntaxException error) {
+            String msg = "[AVISO] Não foi possível encontrar o diretório padrão...";
+            Logger.getGlobal().log(Level.WARNING, msg, error);
+            defaultPath = System.getProperty("user.dir");
+        }
+        
+        //Configura o diretório padrão
+        jFileChooser_JSON.setCurrentDirectory(new File(defaultPath));
+        jFileChooser_LOG.setCurrentDirectory(new File(defaultPath));
+        
         //Atualiza console
+        this.printEvent(evt.paramString());
         this.updateConsole();
     }//GEN-LAST:event_onWindowOpened
 
@@ -313,6 +434,70 @@ public class MainWindow extends javax.swing.JFrame {
         //Atualiza console
         this.updateConsole();
     }//GEN-LAST:event_onCreateButtonClicked
+
+    //Botão para selecionar o arquivo de JSON
+    private void onButtonJsonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onButtonJsonClicked
+        int returnVal = jFileChooser_JSON.showOpenDialog(this);
+        
+        //Usuário selecionou um arquivo
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            //Obtém o caminho de diretório completo do arquivo
+            File file = jFileChooser_JSON.getSelectedFile();
+            jTextField_JsonFile.setText(file.getAbsolutePath());
+        }
+        
+        //Atualiza console
+        this.printEvent(evt.paramString() + ",func=onButtonJsonClicked");
+        this.updateConsole();
+    }//GEN-LAST:event_onButtonJsonClicked
+
+    //Botão para selecionar o arquivo de LOG do SGBD
+    private void onButtonLogClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onButtonLogClicked
+        int returnVal = jFileChooser_LOG.showOpenDialog(this);
+        
+        //Usuário selecionou um arquivo
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            //Obtém o caminho de diretório completo do arquivo
+            File file = jFileChooser_LOG.getSelectedFile();
+            jTextField_LogFile.setText(file.getAbsolutePath());
+        }
+        
+        //Atualiza console
+        this.printEvent(evt.paramString() + ",func=onButtonLogClicked");
+        this.updateConsole();
+    }//GEN-LAST:event_onButtonLogClicked
+
+    //Botão para executar a simulação dos eventos de LOG do SGBD
+    private void onButtonSimulationClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onButtonSimulationClicked
+        this.printEvent(evt.paramString());
+        final String JSON = jTextField_JsonFile.getText();
+        final String LOG = jTextField_LogFile.getText();
+        final String TABLE = jTextField_TableName.getText();
+        
+        //Obtém dados do arquivo JSON 
+        JsonBehavior jb = new JsonBehavior();
+        jb.openJsonFile(JSON);
+        
+        //Exibe conteúdo do arquivo
+        System.out.println(jb.showContents());
+        
+        //Insere dados obtidos no Postgres
+        jb.insertDataIntoPostgres(psql, TABLE);
+        
+        //Exibe o conteúdo da tabela no Postgres
+        psql.runQuery("select * from " + TABLE + ";");
+        
+        //Simula a execução dos comandos do arquivo de log do SGBD
+        LogBehavior lb = new LogBehavior();
+        lb.openFile(LOG);
+        lb.runLogInterpreter(psql, TABLE);
+        
+        //Exibe a tabela no Postgres após a execução da simulação
+        psql.runQuery("select * from " + TABLE + " order by id asc;");
+        
+        //Atualiza console
+        this.updateConsole();
+    }//GEN-LAST:event_onButtonSimulationClicked
 
     //Notificação de evento na janela gráfica
     private void printEvent(String event) {
@@ -399,10 +584,18 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel Tab_QUERY;
     private javax.swing.JButton jButton_ConnectDB;
     private javax.swing.JButton jButton_CreateDB;
+    private javax.swing.JButton jButton_JsonFile;
+    private javax.swing.JButton jButton_LogFile;
+    private javax.swing.JButton jButton_Simulation;
+    private javax.swing.JFileChooser jFileChooser_JSON;
+    private javax.swing.JFileChooser jFileChooser_LOG;
     private javax.swing.JLabel jLabel_Database;
     private javax.swing.JLabel jLabel_Host;
+    private javax.swing.JLabel jLabel_JsonFile;
+    private javax.swing.JLabel jLabel_LogFile;
     private javax.swing.JLabel jLabel_Password;
     private javax.swing.JLabel jLabel_Port;
+    private javax.swing.JLabel jLabel_TableName;
     private javax.swing.JLabel jLabel_User;
     private javax.swing.JPasswordField jPasswordField_DB;
     private javax.swing.JScrollPane jScrollPane_Console;
@@ -410,7 +603,10 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTextArea jTextArea_Console;
     private javax.swing.JTextField jTextField_Database;
     private javax.swing.JTextField jTextField_Host;
+    private javax.swing.JTextField jTextField_JsonFile;
+    private javax.swing.JTextField jTextField_LogFile;
     private javax.swing.JTextField jTextField_Port;
+    private javax.swing.JTextField jTextField_TableName;
     private javax.swing.JTextField jTextField_User;
     // End of variables declaration//GEN-END:variables
 }
