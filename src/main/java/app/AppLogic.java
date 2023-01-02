@@ -5,18 +5,18 @@
 package app;
 
 import app.gui.MainWindow;
-import globals.AppSystem;
-import globals.PSQL;
-import sgbd.file.log.LogBehavior;
-import sgbd.file.json.JsonBehavior;
-import sgbd.PostgreSQL;
+import globals.*;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import sgbd.file.log.LogBehavior;
+import sgbd.file.json.JsonBehavior;
+import sgbd.PostgreSQL;
 
 public class AppLogic {
     
@@ -144,6 +144,18 @@ public class AppLogic {
 
             //Exibe a tabela no Postgres após a execução da simulação
             psql.runQuery("select * from " + AppSystem.TABLE_NAME + " order by id asc;");
+            
+            //Desconecta-se do Postgres e encerra o software
+            try {
+                psql.disconnectFromPostgres();
+            }
+            catch (SQLException error) {
+                String msg = "[FATAL] Não foi possível se desconectar do PostgreSQL...";
+                Logger.getGlobal().log(Level.SEVERE, msg, error);
+                System.out.println(msg);
+            }
+            
+            System.out.println("########## SOFTWARE ENCERRADO ##########");
         }
     }
     

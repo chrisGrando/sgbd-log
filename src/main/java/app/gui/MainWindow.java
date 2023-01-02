@@ -10,6 +10,7 @@ import globals.*;
 import app.gui.filter.*;
 import java.io.File;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -84,6 +85,9 @@ public class MainWindow extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(640, 480));
         setSize(new java.awt.Dimension(640, 480));
         addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                onWindowClosing(evt);
+            }
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 onWindowOpened(evt);
             }
@@ -498,6 +502,23 @@ public class MainWindow extends javax.swing.JFrame {
         //Atualiza console
         this.updateConsole();
     }//GEN-LAST:event_onButtonSimulationClicked
+
+    //Executa ao fechar a janela
+    private void onWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_onWindowClosing
+        //Desconecta-se do PostgreSQL
+        try {
+            psql.disconnectFromPostgres();
+        }
+        catch (SQLException error) {
+            String msg = "[FATAL] Não foi possível se desconectar do PostgreSQL...";
+            Logger.getGlobal().log(Level.SEVERE, msg, error);
+            System.out.println(msg);
+        }
+        
+        //Mensagem do evento
+        this.printEvent(evt.paramString());
+        System.out.println("########## SOFTWARE ENCERRADO ##########");
+    }//GEN-LAST:event_onWindowClosing
 
     //Notificação de evento na janela gráfica
     private void printEvent(String event) {

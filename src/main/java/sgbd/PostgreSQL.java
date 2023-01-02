@@ -26,6 +26,7 @@ public class PostgreSQL {
     private String password;
     private String url;
     private Connection connection;
+    private boolean isConnected;
     
     //Construtor
     public PostgreSQL() {
@@ -36,17 +37,24 @@ public class PostgreSQL {
         password = PSQL.PASSWORD;
         url = PSQL.GET_URL();
         connection = null;
+        isConnected = false;
     }
     
     //Conexão básica
     public void connectToPostgres() {
         try {
+            //Se já estiver conectado, encerra a conexão atual primeiro
+            this.disconnectFromPostgres();
+            
             //Realiza a conexão
             this.connection = DriverManager.getConnection(
                 this.url,
                 this.user,
                 this.password
             );
+            
+            //Conexão realizada com sucesso
+            this.isConnected = true;
             
             //Exibe informações da conexão
             String client = this.connection.getClientInfo("ApplicationName");
@@ -62,6 +70,7 @@ public class PostgreSQL {
             String msg = "[FATAL] Não foi possível conectar-se ao PostgreSQL...";
             Logger.getGlobal().log(Level.SEVERE, msg, error);
             System.out.println(msg); //Mensagem no console normal
+            this.isConnected = false;
         }
     }
     
@@ -145,6 +154,24 @@ public class PostgreSQL {
         }
         
         return objList;
+    }
+    
+    //Encerra a conexão atual
+    public void disconnectFromPostgres()
+      throws SQLException {
+        //Checa se está conectado
+        if(this.isConnected) {
+            //Mensagem da operação
+            String client = this.connection.getClientInfo("ApplicationName");
+            String currentURL = this.connection.getMetaData().getURL();
+            System.out.println("*** " + client + " ***");
+            System.out.println("Desconectado de: " + currentURL);
+            System.out.println();
+            
+            //Desconecta-se do PostgreSQL
+            this.connection.close();
+            this.isConnected = false;
+        }
     }
     
     //Gera nova URL de conexão
