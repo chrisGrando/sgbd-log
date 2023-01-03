@@ -66,6 +66,15 @@ public class MainWindow extends javax.swing.JFrame {
         jButton_LogFile = new javax.swing.JButton();
         jButton_Simulation = new javax.swing.JButton();
         Tab_QUERY = new javax.swing.JPanel();
+        jButton_TemplateCode1 = new javax.swing.JButton();
+        jButton_TemplateCode2 = new javax.swing.JButton();
+        jButton_TemplateCode3 = new javax.swing.JButton();
+        jButton_TemplateCode4 = new javax.swing.JButton();
+        jButton_TemplateCode5 = new javax.swing.JButton();
+        jButton_TemplateCode6 = new javax.swing.JButton();
+        jScrollPane_Query = new javax.swing.JScrollPane();
+        jTextArea_Query = new javax.swing.JTextArea();
+        jButton_RunQuery = new javax.swing.JButton();
         jScrollPane_Console = new javax.swing.JScrollPane();
         jTextArea_Console = new javax.swing.JTextArea();
 
@@ -93,10 +102,11 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jTabbedPane.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
         jTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         jTabbedPane.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        Tab_PSQL.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Tab_PSQL.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(0, 0, 0)));
 
         jLabel_Host.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
         jLabel_Host.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -217,7 +227,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jTabbedPane.addTab("PSQL", Tab_PSQL);
 
-        Tab_LOG.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Tab_LOG.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(0, 0, 0)));
 
         jLabel_TableName.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
         jLabel_TableName.setText("Nome da tabela");
@@ -236,6 +246,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButton_JsonFile.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
         jButton_JsonFile.setText("...");
+        jButton_JsonFile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton_JsonFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 onButtonJsonClicked(evt);
@@ -244,6 +255,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButton_LogFile.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
         jButton_LogFile.setText("...");
+        jButton_LogFile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton_LogFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 onButtonLogClicked(evt);
@@ -252,6 +264,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jButton_Simulation.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
         jButton_Simulation.setText("Executar simulação");
+        jButton_Simulation.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jButton_Simulation.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 onButtonSimulationClicked(evt);
@@ -300,24 +313,137 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(jLabel_LogFile)
                     .addComponent(jTextField_LogFile, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton_LogFile, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addComponent(jButton_Simulation, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(70, 70, 70))
         );
 
         jTabbedPane.addTab("LOG", Tab_LOG);
 
-        Tab_QUERY.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Tab_QUERY.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, new java.awt.Color(0, 0, 0)));
+
+        jButton_TemplateCode1.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jButton_TemplateCode1.setText("SELECT S/ JOIN");
+        jButton_TemplateCode1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_TemplateCode1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onTemplateButton1Clicked(evt);
+            }
+        });
+
+        jButton_TemplateCode2.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jButton_TemplateCode2.setText("SELECT C/ JOIN");
+        jButton_TemplateCode2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_TemplateCode2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onTemplateButton2Clicked(evt);
+            }
+        });
+
+        jButton_TemplateCode3.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jButton_TemplateCode3.setText("CREATE TABLE");
+        jButton_TemplateCode3.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_TemplateCode3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onTemplateButton3Clicked(evt);
+            }
+        });
+
+        jButton_TemplateCode4.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jButton_TemplateCode4.setText("INSERT INTO TABLE");
+        jButton_TemplateCode4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_TemplateCode4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onTemplateButton4Clicked(evt);
+            }
+        });
+
+        jButton_TemplateCode5.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jButton_TemplateCode5.setText("UPDATE TABLE");
+        jButton_TemplateCode5.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_TemplateCode5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onTemplateButton5Clicked(evt);
+            }
+        });
+
+        jButton_TemplateCode6.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jButton_TemplateCode6.setText("DELETE FROM TABLE");
+        jButton_TemplateCode6.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_TemplateCode6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onTemplateButton6Clicked(evt);
+            }
+        });
+
+        jScrollPane_Query.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
+        jScrollPane_Query.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        jTextArea_Query.setColumns(20);
+        jTextArea_Query.setFont(new java.awt.Font("Liberation Mono", 0, 14)); // NOI18N
+        jTextArea_Query.setRows(5);
+        jTextArea_Query.setText("-- Insira o seu código SQL aqui!\n");
+        jTextArea_Query.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        jScrollPane_Query.setViewportView(jTextArea_Query);
+
+        jButton_RunQuery.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
+        jButton_RunQuery.setText("EXECUTAR");
+        jButton_RunQuery.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_RunQuery.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onRunQueryButtonClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout Tab_QUERYLayout = new javax.swing.GroupLayout(Tab_QUERY);
         Tab_QUERY.setLayout(Tab_QUERYLayout);
         Tab_QUERYLayout.setHorizontalGroup(
             Tab_QUERYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 786, Short.MAX_VALUE)
+            .addGroup(Tab_QUERYLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane_Query)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Tab_QUERYLayout.createSequentialGroup()
+                .addGap(293, 293, 293)
+                .addComponent(jButton_RunQuery, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                .addGap(293, 293, 293))
+            .addGroup(Tab_QUERYLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(Tab_QUERYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton_TemplateCode2, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                    .addComponent(jButton_TemplateCode1, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(Tab_QUERYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton_TemplateCode4, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                    .addComponent(jButton_TemplateCode3, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(Tab_QUERYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton_TemplateCode6, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+                    .addComponent(jButton_TemplateCode5, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE))
+                .addGap(15, 15, 15))
         );
         Tab_QUERYLayout.setVerticalGroup(
             Tab_QUERYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 418, Short.MAX_VALUE)
+            .addGroup(Tab_QUERYLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(Tab_QUERYLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(Tab_QUERYLayout.createSequentialGroup()
+                        .addComponent(jButton_TemplateCode1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton_TemplateCode2, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(Tab_QUERYLayout.createSequentialGroup()
+                        .addComponent(jButton_TemplateCode3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton_TemplateCode4, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(Tab_QUERYLayout.createSequentialGroup()
+                        .addComponent(jButton_TemplateCode5, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jButton_TemplateCode6, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane_Query, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton_RunQuery, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         jTabbedPane.addTab("QUERY", Tab_QUERY);
@@ -351,7 +477,7 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane_Console, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                .addComponent(jScrollPane_Console, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -520,6 +646,123 @@ public class MainWindow extends javax.swing.JFrame {
         System.out.println("########## SOFTWARE ENCERRADO ##########");
     }//GEN-LAST:event_onWindowClosing
 
+    //Botão de template de código SQL para select *sem* join
+    private void onTemplateButton1Clicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onTemplateButton1Clicked
+        String code;
+        
+        //Template
+        code =  "select *\n";
+        code += "from TABLE\n";
+        code += "where (CONDITION = true);\n";
+        
+        //Insere template na área de texto
+        jTextArea_Query.append(code);
+        
+        //Atualiza console
+        this.printEvent(evt.paramString());
+        this.updateConsole();
+    }//GEN-LAST:event_onTemplateButton1Clicked
+
+    //Botão de template de código SQL para select *com* join
+    private void onTemplateButton2Clicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onTemplateButton2Clicked
+        String code;
+        
+        //Template
+        code =  "select t1.ID, t2.NAME, t2.VALUE\n";
+        code += "from TABLE1 t1\n";
+        code += "join TABLE2 t2\n";
+        code += "on t1.ID = t2.FK_ID\n";
+        code += "where (CONDITION = true);\n";
+        
+        //Insere template na área de texto
+        jTextArea_Query.append(code);
+        
+        //Atualiza console
+        this.printEvent(evt.paramString());
+        this.updateConsole();
+    }//GEN-LAST:event_onTemplateButton2Clicked
+
+    //Botão de template de código SQL para criação de tabela
+    private void onTemplateButton3Clicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onTemplateButton3Clicked
+        String code;
+        
+        //Template
+        code =  "create table TABLE_NAME(\n";
+        code += "    ID serial primary key,\n";
+        code += "    NAME varchar(255),\n";
+        code += "    VALUE int,\n";
+        code += "    DATE_TIME date\n";
+        code += ");\n";
+        
+        //Insere template na área de texto
+        jTextArea_Query.append(code);
+        
+        //Atualiza console
+        this.printEvent(evt.paramString());
+        this.updateConsole();
+    }//GEN-LAST:event_onTemplateButton3Clicked
+
+    //Botão de template de código SQL para inserção de dados na tabela
+    private void onTemplateButton4Clicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onTemplateButton4Clicked
+        String code;
+        
+        //Template
+        code =  "insert into TABLE(COLUMN1, COLUMN2, COLUMN3)\n";
+        code += "values (VALUE1, VALUE2, VALUE3);\n";
+        
+        //Insere template na área de texto
+        jTextArea_Query.append(code);
+        
+        //Atualiza console
+        this.printEvent(evt.paramString());
+        this.updateConsole();
+    }//GEN-LAST:event_onTemplateButton4Clicked
+
+    //Botão de template de código SQL para atualização de dados na tabela
+    private void onTemplateButton5Clicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onTemplateButton5Clicked
+        String code;
+        
+        //Template
+        code =  "update TABLE\n";
+        code += "set COLUMN1 = VALUE1, COLUMN2 = VALUE2\n";
+        code += "where COLUMN_ID = VALUE_FILTER;\n";
+        
+        //Insere template na área de texto
+        jTextArea_Query.append(code);
+        
+        //Atualiza console
+        this.printEvent(evt.paramString());
+        this.updateConsole();
+    }//GEN-LAST:event_onTemplateButton5Clicked
+
+    //Botão de template de código SQL para remoção de dados na tabela
+    private void onTemplateButton6Clicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onTemplateButton6Clicked
+        String code;
+        
+        //Template
+        code =  "delete from TABLE\n";
+        code += "where COLUMN_ID = VALUE_FILTER;\n";
+        
+        //Insere template na área de texto
+        jTextArea_Query.append(code);
+        
+        //Atualiza console
+        this.printEvent(evt.paramString());
+        this.updateConsole();
+    }//GEN-LAST:event_onTemplateButton6Clicked
+
+    //Botão para executar código SQL escrito na área de texto
+    private void onRunQueryButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onRunQueryButtonClicked
+        this.printEvent(evt.paramString());
+        String sql = jTextArea_Query.getText();
+        
+        //Executa código
+        psql.runQuery(sql);
+        
+        //Atualiza console
+        this.updateConsole();
+    }//GEN-LAST:event_onRunQueryButtonClicked
+
     //Notificação de evento na janela gráfica
     private void printEvent(String event) {
         System.out.println("*** GUI ***");
@@ -607,7 +850,14 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButton_CreateDB;
     private javax.swing.JButton jButton_JsonFile;
     private javax.swing.JButton jButton_LogFile;
+    private javax.swing.JButton jButton_RunQuery;
     private javax.swing.JButton jButton_Simulation;
+    private javax.swing.JButton jButton_TemplateCode1;
+    private javax.swing.JButton jButton_TemplateCode2;
+    private javax.swing.JButton jButton_TemplateCode3;
+    private javax.swing.JButton jButton_TemplateCode4;
+    private javax.swing.JButton jButton_TemplateCode5;
+    private javax.swing.JButton jButton_TemplateCode6;
     private javax.swing.JFileChooser jFileChooser_JSON;
     private javax.swing.JFileChooser jFileChooser_LOG;
     private javax.swing.JLabel jLabel_Database;
@@ -620,8 +870,10 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel_User;
     private javax.swing.JPasswordField jPasswordField_DB;
     private javax.swing.JScrollPane jScrollPane_Console;
+    private javax.swing.JScrollPane jScrollPane_Query;
     private javax.swing.JTabbedPane jTabbedPane;
     private javax.swing.JTextArea jTextArea_Console;
+    private javax.swing.JTextArea jTextArea_Query;
     private javax.swing.JTextField jTextField_Database;
     private javax.swing.JTextField jTextField_Host;
     private javax.swing.JTextField jTextField_JsonFile;
