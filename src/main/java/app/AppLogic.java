@@ -25,6 +25,14 @@ public class AppLogic {
         //Número total de parâmetros
         final int size = args.length;
         
+        //Se não houverem parâmetros, encerra o aplicativo
+        if(size == 0) {
+            System.out.println("[ATENÇÃO] Nenhum parâmetro foi informado!");
+            System.out.println("O software não pode ser executado dessa forma.");
+            System.out.println("Use [-h] para ver a lista de parâmetros disponíveis.");
+            System.exit(0);
+        }
+        
         //Parâmetros de linha de comando
         for(int i = 0; i < size; i++) {
             char firstChar = args[i].charAt(0);
@@ -120,6 +128,22 @@ public class AppLogic {
         }
         //Modo de linha de comando
         else {
+            //Checa se o diretório do arquivo Json NÃO foi informado
+            if(AppSystem.JSON_TABLE == null) {
+                System.out.println("[FATAL] Diretório do arquivo JSON não foi informado!");
+                System.out.println("Use [-h] para ver a lista de parâmetros disponíveis.");
+                System.out.println("Saindo...");
+                System.exit(0);
+            }
+            
+            //Checa se o diretório do arquivo de LOG do banco de dados NÃO foi informado
+            if(AppSystem.SGBD_LOG == null) {
+                System.out.println("[FATAL] Diretório do arquivo de LOG não foi informado!");
+                System.out.println("Use [-h] para ver a lista de parâmetros disponíveis.");
+                System.out.println("Saindo...");
+                System.exit(0);
+            }
+            
             //Inicializa e conecta-se ao PostgreSQL
             PostgreSQL psql = new PostgreSQL();
             psql.connectToPostgres();
