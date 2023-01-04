@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import sgbd.PostgreSQL;
 import sgbd.file.json.JsonBehavior;
 import sgbd.file.log.LogBehavior;
@@ -41,6 +42,9 @@ public class MainWindow extends javax.swing.JFrame {
 
         jFileChooser_JSON = new javax.swing.JFileChooser();
         jFileChooser_LOG = new javax.swing.JFileChooser();
+        jDialog_Warning = new javax.swing.JDialog();
+        jLabel_Message = new javax.swing.JLabel();
+        jButton_OK = new javax.swing.JButton();
         jTabbedPane = new javax.swing.JTabbedPane();
         Tab_PSQL = new javax.swing.JPanel();
         jLabel_Host = new javax.swing.JLabel();
@@ -87,6 +91,31 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooser_LOG.setDialogTitle("Abrir arquivo de LOG do SGBD");
         jFileChooser_LOG.setFileFilter(new LogFileFilter());
         jFileChooser_LOG.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+
+        jDialog_Warning.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        jDialog_Warning.setTitle("AVISO");
+        jDialog_Warning.setMinimumSize(new java.awt.Dimension(420, 140));
+        jDialog_Warning.setName("dialogWarning"); // NOI18N
+        jDialog_Warning.setPreferredSize(new java.awt.Dimension(420, 115));
+        jDialog_Warning.setResizable(false);
+        jDialog_Warning.getContentPane().setLayout(null);
+
+        jLabel_Message.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jLabel_Message.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel_Message.setText("<INSIRA MENSAGEM DE AVISO AQUI>");
+        jDialog_Warning.getContentPane().add(jLabel_Message);
+        jLabel_Message.setBounds(5, 0, 410, 70);
+
+        jButton_OK.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
+        jButton_OK.setText("OK");
+        jButton_OK.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jButton_OK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                onOkWarningButtonClicked(evt);
+            }
+        });
+        jDialog_Warning.getContentPane().add(jButton_OK);
+        jButton_OK.setBounds(170, 70, 80, 30);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SGBD LOG");
@@ -525,6 +554,12 @@ public class MainWindow extends javax.swing.JFrame {
     private void onConnectButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onConnectButtonClicked
         this.printEvent(evt.paramString());
         
+        //Checa se algum campo da aba "PSQL" está em branco
+        if(this.isAnyPsqlFieldEmpty()) {
+            this.showWarning("Favor preencher todos os campos antes de prosseguir...");
+            return;
+        }
+        
         //Configura os dados do PSQL
         psql.setHostWithPort(jTextField_Host.getText(), jTextField_Port.getText());
         psql.setDatabase(jTextField_Database.getText());
@@ -540,8 +575,36 @@ public class MainWindow extends javax.swing.JFrame {
 
     //Cria uma nova database no PostgreSQL e se conecta nela
     private void onCreateButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onCreateButtonClicked
-        this.printEvent(evt.paramString());
+        int response;
         String db = jTextField_Database.getText();
+        
+        //Checa se algum campo da aba "PSQL" está em branco
+        if(this.isAnyPsqlFieldEmpty()) {
+            this.showWarning("Favor preencher todos os campos antes de prosseguir...");
+            return;
+        }
+        
+        //Pergunta se o usuário tem certeza que deseja continuar
+        response = JOptionPane.showOptionDialog(
+            this,
+            "ATENÇÃO!\nSe já existir uma database com o mesmo nome,\nela será deletada assim como todo seu conteúdo.\n\nTem certeza que deseja continuar?",
+            "Continuar?",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            null,
+            1
+        );
+        
+        //Aborta operação se o usuário NÃO selecionar a opção "sim"
+        if(response != JOptionPane.YES_OPTION) {
+            this.printEvent(evt.paramString() + ",option=ABORT");
+            this.updateConsole();
+            return;
+        }
+        
+        //Log de evento
+        this.printEvent(evt.paramString() + ",option=PROCEED");
         
         //Configura os dados do PSQL
         psql.setHostWithPort(jTextField_Host.getText(), jTextField_Port.getText());
@@ -599,10 +662,44 @@ public class MainWindow extends javax.swing.JFrame {
 
     //Botão para executar a simulação dos eventos de LOG do SGBD
     private void onButtonSimulationClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onButtonSimulationClicked
-        this.printEvent(evt.paramString());
+        int response;
+        final String TABLE = jTextField_TableName.getText();
         final String JSON = jTextField_JsonFile.getText();
         final String LOG = jTextField_LogFile.getText();
-        final String TABLE = jTextField_TableName.getText();
+        
+        //Checa se algum campo da aba "LOG" está em branco
+        if(this.isAnyLogFieldEmpty()) {
+            this.showWarning("Favor preencher todos os campos antes de prosseguir...");
+            return;
+        }
+        
+        //Checa se NÃO está conectado no PostgreSQL
+        if(!psql.isConnectedOnPostgres()) {
+            this.showWarning("Favor estabelecer conexão no PSQL antes de prosseguir...");
+            return;
+        }
+        
+        //Pergunta se o usuário tem certeza que deseja continuar
+        response = JOptionPane.showOptionDialog(
+            this,
+            "ATENÇÃO!\nSe já existir uma tabela com o mesmo nome,\nela será deletada assim como todo seu conteúdo.\n\nTem certeza que deseja continuar?",
+            "Continuar?",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            null,
+            1
+        );
+        
+        //Aborta operação se o usuário NÃO selecionar a opção "sim"
+        if(response != JOptionPane.YES_OPTION) {
+            this.printEvent(evt.paramString() + ",option=ABORT");
+            this.updateConsole();
+            return;
+        }
+        
+        //Log de evento
+        this.printEvent(evt.paramString() + ",option=PROCEED");
         
         //Obtém dados do arquivo JSON 
         JsonBehavior jb = new JsonBehavior();
@@ -756,6 +853,12 @@ public class MainWindow extends javax.swing.JFrame {
         this.printEvent(evt.paramString());
         String sql = jTextArea_Query.getText();
         
+        //Checa se NÃO está conectado no PostgreSQL
+        if(!psql.isConnectedOnPostgres()) {
+            this.showWarning("Favor estabelecer conexão no PSQL antes de prosseguir...");
+            return;
+        }
+        
         //Executa código
         psql.runQuery(sql);
         
@@ -763,6 +866,63 @@ public class MainWindow extends javax.swing.JFrame {
         this.updateConsole();
     }//GEN-LAST:event_onRunQueryButtonClicked
 
+    //Fecha janela popup de aviso
+    private void onOkWarningButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onOkWarningButtonClicked
+        jDialog_Warning.dispose();
+        
+        //Atualiza console
+        this.printEvent(evt.paramString() + ",func=onOkWarningButtonClicked");
+        this.updateConsole();
+    }//GEN-LAST:event_onOkWarningButtonClicked
+
+    //Checa se um dos campos da aba "PSQL" está vazio
+    private boolean isAnyPsqlFieldEmpty() {
+        final String password = new String(jPasswordField_DB.getPassword());
+        
+        //Host
+        if(jTextField_Host.getText().isBlank())
+            return true;
+        //Port
+        else if(jTextField_Port.getText().isBlank())
+            return true;
+        //Database
+        else if(jTextField_Database.getText().isBlank())
+            return true;
+        //User
+        else if(jTextField_User.getText().isBlank())
+            return true;
+        //Password
+        else if(password.isEmpty())
+            return true;
+        
+        //Todos os campos foram preenchidos
+        return false;
+    }
+    
+    //Checa se um dos campos da aba "LOG" está vazio
+    private boolean isAnyLogFieldEmpty() {
+        //Table
+        if(jTextField_TableName.getText().isBlank())
+            return true;
+        //JSON
+        else if(jTextField_JsonFile.getText().isBlank())
+            return true;
+        //LOG
+        else if(jTextField_LogFile.getText().isBlank())
+            return true;
+        
+        //Todos os campos foram preenchidos
+        return false;
+    }
+    
+    //Exibe janela de aviso
+    private void showWarning(String msg) {
+        this.updateConsole();
+        jLabel_Message.setText(msg);
+        jDialog_Warning.setVisible(true);
+        jDialog_Warning.setLocationRelativeTo(null);
+    }
+    
     //Notificação de evento na janela gráfica
     private void printEvent(String event) {
         System.out.println("*** GUI ***");
@@ -850,6 +1010,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButton_CreateDB;
     private javax.swing.JButton jButton_JsonFile;
     private javax.swing.JButton jButton_LogFile;
+    private javax.swing.JButton jButton_OK;
     private javax.swing.JButton jButton_RunQuery;
     private javax.swing.JButton jButton_Simulation;
     private javax.swing.JButton jButton_TemplateCode1;
@@ -858,12 +1019,14 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButton_TemplateCode4;
     private javax.swing.JButton jButton_TemplateCode5;
     private javax.swing.JButton jButton_TemplateCode6;
+    private javax.swing.JDialog jDialog_Warning;
     private javax.swing.JFileChooser jFileChooser_JSON;
     private javax.swing.JFileChooser jFileChooser_LOG;
     private javax.swing.JLabel jLabel_Database;
     private javax.swing.JLabel jLabel_Host;
     private javax.swing.JLabel jLabel_JsonFile;
     private javax.swing.JLabel jLabel_LogFile;
+    private javax.swing.JLabel jLabel_Message;
     private javax.swing.JLabel jLabel_Password;
     private javax.swing.JLabel jLabel_Port;
     private javax.swing.JLabel jLabel_TableName;

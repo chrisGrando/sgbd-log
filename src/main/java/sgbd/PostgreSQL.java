@@ -174,6 +174,11 @@ public class PostgreSQL {
         }
     }
     
+    //Retorna se foi estabelecida uma conexão
+    public boolean isConnectedOnPostgres() {
+        return this.isConnected;
+    }
+    
     //Gera nova URL de conexão
     public void generateURL() {
         this.url = "jdbc:postgresql://"
