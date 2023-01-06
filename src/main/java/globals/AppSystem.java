@@ -18,6 +18,9 @@ public class AppSystem {
     public static String CONSOLE_FILE = "/output/console.log";
     public static String ERROR_FILE = "/output/error.log";
     
+    //Modo de interface gráfica
+    public static boolean GUI = false;
+    
     //Arquivo de log do SGBD
     public static String SGBD_LOG = null;
     
@@ -40,6 +43,7 @@ public class AppSystem {
         help += "* Lista de parâmetros:\n\n";
         help += "-v: Exibe a versão do aplicativo e sai\n";
         help += "-h: Exibe esta mensagem e sai\n";
+        help += "-gui: Ativa o modo de interface gráfica\n";
         help += "-host [...]: Nome do host (padrão: localhost)\n";
         help += "-port [...]: Número da porta (padrão: 5432)\n";
         help += "-database [...]: Nome do banco de dados (padrão: postgres)\n";
