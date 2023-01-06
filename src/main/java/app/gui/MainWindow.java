@@ -8,6 +8,9 @@ package app.gui;
 
 import globals.*;
 import app.gui.filter.*;
+import app.gui.resources.HardCoded;
+import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -15,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
 import sgbd.PostgreSQL;
 import sgbd.file.json.JsonBehavior;
 import sgbd.file.log.LogBehavior;
@@ -26,8 +30,9 @@ public class MainWindow extends javax.swing.JFrame {
     //Construtor
     public MainWindow() {
         initComponents();
-        setCenter();
-        //setIcon();
+        setWindowTitle();
+        setIcon();
+        setCustomFonts();
         psql = new PostgreSQL();
     }
 
@@ -96,7 +101,6 @@ public class MainWindow extends javax.swing.JFrame {
         jDialog_Warning.setTitle("AVISO");
         jDialog_Warning.setMinimumSize(new java.awt.Dimension(420, 140));
         jDialog_Warning.setName("dialogWarning"); // NOI18N
-        jDialog_Warning.setPreferredSize(new java.awt.Dimension(420, 115));
         jDialog_Warning.setResizable(false);
         jDialog_Warning.getContentPane().setLayout(null);
 
@@ -513,6 +517,7 @@ public class MainWindow extends javax.swing.JFrame {
         jTabbedPane.getAccessibleContext().setAccessibleName("");
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     //Executa ao abrir a janela
@@ -959,16 +964,81 @@ public class MainWindow extends javax.swing.JFrame {
         this.previousConsoleText = jTextArea_Console.getText();
     }
     
-    /*
     //Exibe o ícone do aplicativo
     private void setIcon() {
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("resources/Icon.png")));
+        HardCoded hc = new HardCoded();
+        setIconImage(hc.getIconFile("icon/SGBD_ICON.png"));
     }
-    */
     
-    //Centraliza a janela
-    private void setCenter() {
-        setLocationRelativeTo(null);
+    //Carrega e aplica as fontes personalizadas na janela
+    private void setCustomFonts() {
+        final float LABELS = 16f;
+        final float TEXTFIELDS = 15f;
+        final float TEMPLATES = 14f;
+        
+        //Obtém as fontes
+        HardCoded hc = new HardCoded();
+        Font cousine = hc.getTTF("ttf/Cousine.ttf");
+        Font gentiumPlus = hc.getTTF("ttf/GentiumPlus.ttf");
+        Font aksharUnicode = hc.getTTF("ttf/AksharUnicode.ttf");
+        
+        //Aborta caso tenha ocorrido algum erro
+        if(cousine == null || gentiumPlus == null || aksharUnicode == null)
+            return;
+        
+        //Registra as fontes
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        ge.registerFont(cousine);
+        ge.registerFont(gentiumPlus);
+        ge.registerFont(aksharUnicode);
+        
+        //Aplica as fontes nos elementos da janela
+        jTabbedPane.setFont(gentiumPlus.deriveFont(14f)); //Abas
+        jTextArea_Console.setFont(cousine.deriveFont(14f)); //Console
+        jTextArea_Query.setFont(cousine.deriveFont(15f)); //Texto SQL
+        jButton_RunQuery.setFont(cousine.deriveFont(Font.BOLD, 18f)); //Executar SQL
+        jLabel_Message.setFont(aksharUnicode.deriveFont(15f)); //Mensagem de aviso
+        //Rótulos
+        jLabel_Host.setFont(aksharUnicode.deriveFont(LABELS));
+        jLabel_Port.setFont(aksharUnicode.deriveFont(LABELS));
+        jLabel_Database.setFont(aksharUnicode.deriveFont(LABELS));
+        jLabel_User.setFont(aksharUnicode.deriveFont(LABELS));
+        jLabel_Password.setFont(aksharUnicode.deriveFont(LABELS));
+        jLabel_TableName.setFont(aksharUnicode.deriveFont(LABELS));
+        jLabel_JsonFile.setFont(aksharUnicode.deriveFont(LABELS));
+        jLabel_LogFile.setFont(aksharUnicode.deriveFont(LABELS));
+        //Campos de texto
+        jTextField_Host.setFont(cousine.deriveFont(TEXTFIELDS));
+        jTextField_Port.setFont(cousine.deriveFont(TEXTFIELDS));
+        jTextField_Database.setFont(cousine.deriveFont(TEXTFIELDS));
+        jTextField_User.setFont(cousine.deriveFont(TEXTFIELDS));
+        jPasswordField_DB.setFont(cousine.deriveFont(TEXTFIELDS));
+        jTextField_TableName.setFont(cousine.deriveFont(TEXTFIELDS));
+        jTextField_JsonFile.setFont(cousine.deriveFont(TEXTFIELDS));
+        jTextField_LogFile.setFont(cousine.deriveFont(TEXTFIELDS));
+        //Botões genéricos
+        jButton_ConnectDB.setFont(cousine.deriveFont(Font.BOLD, 14f));
+        jButton_CreateDB.setFont(cousine.deriveFont(Font.BOLD, 14f));
+        jButton_Simulation.setFont(cousine.deriveFont(Font.BOLD, 17f));
+        jButton_OK.setFont(cousine.deriveFont(Font.BOLD, 16f));
+        //Botões de abrir arquivos
+        jButton_JsonFile.setFont(cousine.deriveFont(Font.BOLD, 14f));
+        jButton_JsonFile.setVerticalAlignment(SwingConstants.TOP);
+        jButton_LogFile.setFont(cousine.deriveFont(Font.BOLD, 14f));
+        jButton_LogFile.setVerticalAlignment(SwingConstants.TOP);
+        //Botões de template de código SQL
+        jButton_TemplateCode1.setFont(cousine.deriveFont(TEMPLATES));
+        jButton_TemplateCode2.setFont(cousine.deriveFont(TEMPLATES));
+        jButton_TemplateCode3.setFont(cousine.deriveFont(TEMPLATES));
+        jButton_TemplateCode4.setFont(cousine.deriveFont(TEMPLATES));
+        jButton_TemplateCode5.setFont(cousine.deriveFont(TEMPLATES));
+        jButton_TemplateCode6.setFont(cousine.deriveFont(TEMPLATES));
+    }
+    
+    //Altera o título da janela
+    private void setWindowTitle() {
+        String title = AppSystem.getAppName() + " ~ " + AppSystem.getAppVersion();
+        setTitle(title);
     }
     
     //Creates new form MainWindow

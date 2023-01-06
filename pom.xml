@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.projects.araucaria</groupId>
     <artifactId>sgbd-log</artifactId>
-    <version>1.0-ALPHA</version>
+    <version>1.0-BETA</version>
     <packaging>jar</packaging>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
@@ -41,6 +41,35 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/classes</outputDirectory>                    
+                            <includeEmptyDirs>true</includeEmptyDirs>
+                            <resources>
+                                <resource>
+                                    <targetPath>${basedir}/target/classes/app/gui/resources/icon</targetPath>
+                                    <directory>${basedir}/src/main/java/app/gui/resources/icon</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                                <resource>
+                                    <targetPath>${basedir}/target/classes/app/gui/resources/ttf</targetPath>
+                                    <directory>${basedir}/src/main/java/app/gui/resources/ttf</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
