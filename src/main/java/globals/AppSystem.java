@@ -109,6 +109,9 @@ public class AppSystem {
         //Se for nulo, então é uma build em desenvolvimento
         if(version == null)
             version = "DEVELOPMENT BUILD";
+        //Se *não* for nulo, incluir um "v" na frente da versão
+        else
+            version = "v" + version;
         
         return version;
     }

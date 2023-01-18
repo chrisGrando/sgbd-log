@@ -5,30 +5,31 @@
     <artifactId>sgbd-log</artifactId>
     <version>1.0-BETA</version>
     <packaging>jar</packaging>
+    <!-- Bibliotecas externas -->
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.5.1</version>
+            <version>[42.5.1,)</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.14.1</version>
+            <version>[2.14.1,)</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.14.1</version>
+            <version>[2.14.1,)</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.14.1</version>
+            <version>[2.14.1,)</version>
         </dependency>
     </dependencies>
     <properties>
@@ -41,6 +42,7 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <!-- Plugin para copiar recursos do código fonte para dentro do arquivo executável -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.0</version>
@@ -52,7 +54,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/target/classes</outputDirectory>                    
+                            <outputDirectory>${basedir}/target</outputDirectory>
                             <includeEmptyDirs>true</includeEmptyDirs>
                             <resources>
                                 <resource>
@@ -70,13 +72,14 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Plugin para compilar o arquivo JAR com dependências -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>app.Main</mainClass>
+                            <mainClass>${exec.mainClass}</mainClass>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                     </archive>
@@ -86,16 +89,57 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <!-- this is used for inheritance merges -->
                         <id>make-assembly</id>
-                        <!-- bind to the packaging phase -->
-                        <phase>package</phase> 
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+            <!-- Plugin para gerar executável do Windows (.exe)
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>launch4j</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>console</headerType>
+                            <outfile>${basedir}/target/${project.artifactId}.exe</outfile>
+                            <jar>${basedir}/target/${project.artifactId}.jar</jar>
+                            <errTitle>${project.name}</errTitle>
+                            <classPath>
+                                <mainClass>${exec.mainClass}</mainClass>
+                                <addDependencies>false</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <jre>
+                                <minVersion>17</minVersion>
+                                <opts>
+                                    <opt>-Djava.endorsed.dirs=./endorsed</opt>
+                                </opts>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>${project.version}</fileVersion>
+                                <txtFileVersion>${project.version}</txtFileVersion>
+                                <fileDescription>${project.description}</fileDescription>
+                                <copyright>my copyright</copyright>
+                                <productVersion>${project.version}</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>${project.name}</productName>
+                                <internalName>${project.artifactId}</internalName>
+                                <originalFilename>l4j.exe</originalFilename>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
         </plugins>
     </build>
     <name>SGBD Log</name>
