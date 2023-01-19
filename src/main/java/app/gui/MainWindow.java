@@ -967,7 +967,7 @@ public class MainWindow extends javax.swing.JFrame {
     //Exibe o ícone do aplicativo
     private void setIcon() {
         HardCoded hc = new HardCoded();
-        setIconImage(hc.getIconFile("icon/SGBD_ICON.png"));
+        setIconImage(hc.getIconFile("icon/ICON_256.png"));
     }
     
     //Carrega e aplica as fontes personalizadas na janela
