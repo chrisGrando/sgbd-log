@@ -3,7 +3,6 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.projects.araucaria</groupId>
     <artifactId>sgbd-log</artifactId>
-    <version>1.0-BETA</version>
     <packaging>jar</packaging>
     <!-- Bibliotecas externas -->
     <dependencies>
@@ -32,6 +31,7 @@
             <version>[2.14.1,)</version>
         </dependency>
     </dependencies>
+    <!-- Configurações do projeto (codificação, versão do Java, classe da função "main", etc) -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -39,6 +39,7 @@
         <maven.compiler.target>17</maven.compiler.target>
         <exec.mainClass>app.Main</exec.mainClass>
     </properties>
+    <!-- Plugins e configurações de compilação -->
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -48,7 +49,7 @@
                 <version>3.3.0</version>
                 <executions>
                     <execution>
-                        <id>copy-resources</id>
+                        <id>copy-files</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -97,51 +98,86 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- Plugin para gerar executável do Windows (.exe)
+            <!-- Plugin para gerar executável do Windows (.exe) -->
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
                 <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.3.1</version>
                 <executions>
+                    <!-- Versão de 32-bit -->
                     <execution>
-                        <id>launch4j</id>
-                        <phase>deploy</phase>
+                        <id>32-bit-binary</id>
+                        <phase>install</phase>
                         <goals>
                             <goal>launch4j</goal>
                         </goals>
                         <configuration>
-                            <headerType>console</headerType>
-                            <outfile>${basedir}/target/${project.artifactId}.exe</outfile>
-                            <jar>${basedir}/target/${project.artifactId}.jar</jar>
-                            <errTitle>${project.name}</errTitle>
-                            <classPath>
-                                <mainClass>${exec.mainClass}</mainClass>
-                                <addDependencies>false</addDependencies>
-                                <preCp>anything</preCp>
-                            </classPath>
+                            <headerType>gui</headerType>
+                            <outfile>${basedir}/target/${project.artifactId}-x32.exe</outfile>
+                            <jar>${project.artifactId}.jar</jar>
+                            <cmdLine>-gui</cmdLine>
+                            <chdir>.</chdir>
+                            <dontWrapJar>true</dontWrapJar>
+                            <stayAlive>true</stayAlive>
+                            <icon>${basedir}/target/classes/app/gui/resources/icon/PROJECT.ico</icon>
+                            <disableVersionInfoDefaults>false</disableVersionInfoDefaults>
                             <jre>
+                                <path>jre</path>
                                 <minVersion>17</minVersion>
-                                <opts>
-                                    <opt>-Djava.endorsed.dirs=./endorsed</opt>
-                                </opts>
+                                <requires64Bit>false</requires64Bit>
                             </jre>
                             <versionInfo>
-                                <fileVersion>${project.version}</fileVersion>
-                                <txtFileVersion>${project.version}</txtFileVersion>
-                                <fileDescription>${project.description}</fileDescription>
-                                <copyright>my copyright</copyright>
-                                <productVersion>${project.version}</productVersion>
-                                <txtProductVersion>${project.version}</txtProductVersion>
                                 <productName>${project.name}</productName>
-                                <internalName>${project.artifactId}</internalName>
-                                <originalFilename>l4j.exe</originalFilename>
+                                <companyName>${project.groupId}</companyName>
+                                <trademarks>${project.groupId}</trademarks>
+                                <txtFileVersion>v${project.version}</txtFileVersion>
+                                <txtProductVersion>v${project.version}</txtProductVersion>
+                                <originalFilename>${project.artifactId}.exe</originalFilename>
+                                <copyright>Copyright © ${currentYear} ${project.groupId}. All rights reserved.</copyright>
+                                <language>PORTUGUESE_BRAZIL</language>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                    <!-- Versão de 64-bit -->
+                    <execution>
+                        <id>64-bit-binary</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>${basedir}/target/${project.artifactId}-x64.exe</outfile>
+                            <jar>${project.artifactId}.jar</jar>
+                            <cmdLine>-gui</cmdLine>
+                            <chdir>.</chdir>
+                            <dontWrapJar>true</dontWrapJar>
+                            <stayAlive>true</stayAlive>
+                            <icon>${basedir}/target/classes/app/gui/resources/icon/PROJECT.ico</icon>
+                            <disableVersionInfoDefaults>false</disableVersionInfoDefaults>
+                            <jre>
+                                <path>jre</path>
+                                <minVersion>17</minVersion>
+                                <requires64Bit>true</requires64Bit>
+                            </jre>
+                            <versionInfo>
+                                <productName>${project.name}</productName>
+                                <companyName>${project.groupId}</companyName>
+                                <trademarks>${project.groupId}</trademarks>
+                                <txtFileVersion>v${project.version}</txtFileVersion>
+                                <txtProductVersion>v${project.version}</txtProductVersion>
+                                <originalFilename>${project.artifactId}.exe</originalFilename>
+                                <copyright>Copyright © ${currentYear} ${project.groupId}. All rights reserved.</copyright>
+                                <language>PORTUGUESE_BRAZIL</language>
                             </versionInfo>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            -->
         </plugins>
     </build>
+    <!-- Descrição do projeto (nome, versão, e um breve resumo sobre o software) -->
     <name>SGBD Log</name>
+    <version>1.0-BETA</version>
     <description>Trabalho Prático - Banco de Dados II</description>
 </project>
