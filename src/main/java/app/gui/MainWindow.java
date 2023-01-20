@@ -14,6 +14,7 @@ import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -551,7 +552,7 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooser_LOG.setCurrentDirectory(new File(defaultPath));
         
         //Atualiza console
-        this.printEvent(evt.paramString());
+        this.printEvent(evt.paramString() + ",title=" + this.getTitle());
         this.updateConsole();
     }//GEN-LAST:event_onWindowOpened
 
@@ -857,6 +858,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void onRunQueryButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onRunQueryButtonClicked
         this.printEvent(evt.paramString());
         String sql = jTextArea_Query.getText();
+        List<String[]> result;
         
         //Checa se NÃO está conectado no PostgreSQL
         if(!psql.isConnectedOnPostgres()) {
@@ -865,10 +867,16 @@ public class MainWindow extends javax.swing.JFrame {
         }
         
         //Executa código
-        psql.runQuery(sql);
+        result = psql.runQuery(sql);
         
         //Atualiza console
         this.updateConsole();
+        
+        //Abre a janela para vizualizar a tabela do query (se houver)
+        if(result != null) {
+            TableWindow tw = new TableWindow(this, result);
+            tw.start();
+        }
     }//GEN-LAST:event_onRunQueryButtonClicked
 
     //Fecha janela popup de aviso
@@ -933,6 +941,12 @@ public class MainWindow extends javax.swing.JFrame {
         System.out.println("*** GUI ***");
         System.out.println(event);
         System.out.println();
+    }
+    
+    //Eventos em outra(s) janela(s)
+    public void externalEvent(String event) {
+        this.printEvent("[EXTERNAL] " + event);
+        this.updateConsole();
     }
     
     //Atualiza o texto do console da janela
