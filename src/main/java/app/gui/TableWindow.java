@@ -6,10 +6,18 @@
 **/
 package app.gui;
 
+import app.gui.csv.TableWriter;
+import app.gui.filter.CsvFileFilter;
 import app.gui.resources.HardCoded;
+import globals.AppSystem;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
+import java.io.File;
+import java.net.URISyntaxException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
@@ -35,11 +43,18 @@ public class TableWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jFileChooser_CSV = new javax.swing.JFileChooser();
         jPanel_Main = new javax.swing.JPanel();
         jScrollPane_Table = new javax.swing.JScrollPane();
         jTable_Query = new javax.swing.JTable();
         jPanel_Button = new javax.swing.JPanel();
         jButton_Export = new javax.swing.JButton();
+
+        jFileChooser_CSV.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
+        jFileChooser_CSV.setCurrentDirectory(null);
+        jFileChooser_CSV.setDialogTitle("Exportar tabela");
+        jFileChooser_CSV.setFileFilter(new CsvFileFilter());
+        jFileChooser_CSV.setToolTipText("");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Vizualização de tabela");
@@ -67,8 +82,6 @@ public class TableWindow extends javax.swing.JFrame {
         jTable_Query.setIntercellSpacing(new java.awt.Dimension(2, 2));
         jTable_Query.setRowHeight(30);
         jTable_Query.setShowGrid(true);
-        jTable_Query.setShowHorizontalLines(true);
-        jTable_Query.setShowVerticalLines(true);
         jScrollPane_Table.setViewportView(jTable_Query);
 
         jButton_Export.setFont(new java.awt.Font("Liberation Sans", 1, 14)); // NOI18N
@@ -135,6 +148,7 @@ public class TableWindow extends javax.swing.JFrame {
 
     //Executa ao abrir a janela
     private void onWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_onWindowOpened
+        String defaultPath;
         int columnSize = jTable_Query.getColumnCount();
         int rowSize = jTable_Query.getRowCount();
         DefaultTableModel jTableModel = (DefaultTableModel)jTable_Query.getModel();
@@ -156,7 +170,6 @@ public class TableWindow extends javax.swing.JFrame {
         }
         
         //Reseta o número de linhas e colunas
-        jTableModel = (DefaultTableModel)jTable_Query.getModel();
         jTableModel.setRowCount(0);
         jTableModel.setColumnCount(0);
         
@@ -182,12 +195,44 @@ public class TableWindow extends javax.swing.JFrame {
         //Desabilita a edição de cédulas
         jTable_Query.setDefaultEditor(Object.class, null);
         
+        /*
+        * Tabelas CSV.
+        * Configura diretório padrão para salvar arquivos.
+        */
+        
+        //Obtém localização do arquivo JAR
+        try {
+            defaultPath = AppSystem.getJarFolder();
+        }
+        catch (URISyntaxException error) {
+            String msg = "[AVISO] Não foi possível encontrar o diretório padrão...";
+            Logger.getGlobal().log(Level.WARNING, msg, error);
+            defaultPath = System.getProperty("user.dir");
+        }
+        
+        //Configura o diretório padrão
+        jFileChooser_CSV.setCurrentDirectory(new File(defaultPath));
+        jFileChooser_CSV.setSelectedFile(new File(defaultPath + "/query.csv"));
+        
         //Atualiza console
         mainWindow.externalEvent(evt.paramString() + ",title=" + this.getTitle());
     }//GEN-LAST:event_onWindowOpened
 
+    //Exporta tabela como planilha CSV
     private void onExportButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onExportButtonClicked
-        //TODO: Adicionar código para exportar tabela como planilha
+        int returnVal = jFileChooser_CSV.showSaveDialog(this);
+        TableWriter tw;
+        File file;
+        
+        //Usuário selecionou um arquivo
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            //Obtém o caminho de diretório completo do arquivo
+            file = jFileChooser_CSV.getSelectedFile();
+            
+            //Grava a planilha CSV
+            tw = new TableWriter();
+            tw.write(file.getAbsolutePath(), this.tableContents);
+        }
         
         //Atualiza console
         mainWindow.externalEvent(evt.paramString());
@@ -198,19 +243,19 @@ public class TableWindow extends javax.swing.JFrame {
         //Obtém as fontes
         HardCoded hc = new HardCoded();
         Font cousine = hc.getTTF("ttf/Cousine.ttf");
-        Font aksharUnicode = hc.getTTF("ttf/AksharUnicode.ttf");
+        Font lekton = hc.getTTF("ttf/Lekton.ttf");
         
         //Aborta caso tenha ocorrido algum erro
-        if(cousine == null || aksharUnicode == null)
+        if(cousine == null || lekton == null)
             return;
         
         //Registra as fontes
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
         ge.registerFont(cousine);
-        ge.registerFont(aksharUnicode);
+        ge.registerFont(lekton);
         
         //Aplica as fontes nos elementos da janela
-        jTable_Query.setFont(aksharUnicode.deriveFont(16f));
+        jTable_Query.setFont(lekton.deriveFont(16f));
         jButton_Export.setFont(cousine.deriveFont(Font.BOLD, 14f));
     }
     
@@ -253,6 +298,7 @@ public class TableWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton_Export;
+    private javax.swing.JFileChooser jFileChooser_CSV;
     private javax.swing.JPanel jPanel_Button;
     private javax.swing.JPanel jPanel_Main;
     private javax.swing.JScrollPane jScrollPane_Table;
