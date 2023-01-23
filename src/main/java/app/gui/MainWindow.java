@@ -48,9 +48,6 @@ public class MainWindow extends javax.swing.JFrame {
 
         jFileChooser_JSON = new javax.swing.JFileChooser();
         jFileChooser_LOG = new javax.swing.JFileChooser();
-        jDialog_Warning = new javax.swing.JDialog();
-        jLabel_Message = new javax.swing.JLabel();
-        jButton_OK = new javax.swing.JButton();
         jTabbedPane = new javax.swing.JTabbedPane();
         Tab_PSQL = new javax.swing.JPanel();
         jLabel_Host = new javax.swing.JLabel();
@@ -97,30 +94,6 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooser_LOG.setDialogTitle("Abrir arquivo de LOG do SGBD");
         jFileChooser_LOG.setFileFilter(new LogFileFilter());
         jFileChooser_LOG.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
-
-        jDialog_Warning.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        jDialog_Warning.setTitle("AVISO");
-        jDialog_Warning.setMinimumSize(new java.awt.Dimension(420, 140));
-        jDialog_Warning.setName("dialogWarning"); // NOI18N
-        jDialog_Warning.setResizable(false);
-        jDialog_Warning.getContentPane().setLayout(null);
-
-        jLabel_Message.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
-        jLabel_Message.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel_Message.setText("<INSIRA MENSAGEM DE AVISO AQUI>");
-        jDialog_Warning.getContentPane().add(jLabel_Message);
-        jLabel_Message.setBounds(5, 0, 410, 70);
-
-        jButton_OK.setFont(new java.awt.Font("Liberation Sans", 0, 14)); // NOI18N
-        jButton_OK.setText("OK");
-        jButton_OK.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jButton_OK.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                onOkWarningButtonClicked(evt);
-            }
-        });
-        jDialog_Warning.getContentPane().add(jButton_OK);
-        jButton_OK.setBounds(170, 70, 80, 30);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("SGBD LOG");
@@ -879,15 +852,6 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_onRunQueryButtonClicked
 
-    //Fecha janela popup de aviso
-    private void onOkWarningButtonClicked(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_onOkWarningButtonClicked
-        jDialog_Warning.dispose();
-        
-        //Atualiza console
-        this.printEvent(evt.paramString() + ",func=onOkWarningButtonClicked");
-        this.updateConsole();
-    }//GEN-LAST:event_onOkWarningButtonClicked
-
     //Checa se um dos campos da aba "PSQL" está vazio
     private boolean isAnyPsqlFieldEmpty() {
         final String password = new String(jPasswordField_DB.getPassword());
@@ -930,10 +894,20 @@ public class MainWindow extends javax.swing.JFrame {
     
     //Exibe janela de aviso
     private void showWarning(String msg) {
+        //Abre janela de aviso
+        JOptionPane.showOptionDialog(
+            this,
+            msg,
+            "AVISO",
+            JOptionPane.DEFAULT_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            null,
+            null,
+            1
+        );
+        
+        //Atualiza console
         this.updateConsole();
-        jLabel_Message.setText(msg);
-        jDialog_Warning.setVisible(true);
-        jDialog_Warning.setLocationRelativeTo(null);
     }
     
     //Notificação de evento na janela gráfica
@@ -995,9 +969,10 @@ public class MainWindow extends javax.swing.JFrame {
         Font cousine = hc.getTTF("ttf/Cousine.ttf");
         Font gentiumPlus = hc.getTTF("ttf/GentiumPlus.ttf");
         Font aksharUnicode = hc.getTTF("ttf/AksharUnicode.ttf");
+        Font lekton = hc.getTTF("ttf/Lekton.ttf");
         
         //Aborta caso tenha ocorrido algum erro
-        if(cousine == null || gentiumPlus == null || aksharUnicode == null)
+        if(cousine == null || gentiumPlus == null || aksharUnicode == null || lekton == null)
             return;
         
         //Registra as fontes
@@ -1005,13 +980,13 @@ public class MainWindow extends javax.swing.JFrame {
         ge.registerFont(cousine);
         ge.registerFont(gentiumPlus);
         ge.registerFont(aksharUnicode);
+        ge.registerFont(lekton);
         
         //Aplica as fontes nos elementos da janela
         jTabbedPane.setFont(gentiumPlus.deriveFont(14f)); //Abas
         jTextArea_Console.setFont(cousine.deriveFont(14f)); //Console
-        jTextArea_Query.setFont(cousine.deriveFont(15f)); //Texto SQL
+        jTextArea_Query.setFont(lekton.deriveFont(15f)); //Texto SQL
         jButton_RunQuery.setFont(cousine.deriveFont(Font.BOLD, 18f)); //Executar SQL
-        jLabel_Message.setFont(aksharUnicode.deriveFont(15f)); //Mensagem de aviso
         //Rótulos
         jLabel_Host.setFont(aksharUnicode.deriveFont(LABELS));
         jLabel_Port.setFont(aksharUnicode.deriveFont(LABELS));
@@ -1034,7 +1009,6 @@ public class MainWindow extends javax.swing.JFrame {
         jButton_ConnectDB.setFont(cousine.deriveFont(Font.BOLD, 14f));
         jButton_CreateDB.setFont(cousine.deriveFont(Font.BOLD, 14f));
         jButton_Simulation.setFont(cousine.deriveFont(Font.BOLD, 17f));
-        jButton_OK.setFont(cousine.deriveFont(Font.BOLD, 16f));
         //Botões de abrir arquivos
         jButton_JsonFile.setFont(cousine.deriveFont(Font.BOLD, 14f));
         jButton_JsonFile.setVerticalAlignment(SwingConstants.TOP);
@@ -1094,7 +1068,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButton_CreateDB;
     private javax.swing.JButton jButton_JsonFile;
     private javax.swing.JButton jButton_LogFile;
-    private javax.swing.JButton jButton_OK;
     private javax.swing.JButton jButton_RunQuery;
     private javax.swing.JButton jButton_Simulation;
     private javax.swing.JButton jButton_TemplateCode1;
@@ -1103,14 +1076,12 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton jButton_TemplateCode4;
     private javax.swing.JButton jButton_TemplateCode5;
     private javax.swing.JButton jButton_TemplateCode6;
-    private javax.swing.JDialog jDialog_Warning;
     private javax.swing.JFileChooser jFileChooser_JSON;
     private javax.swing.JFileChooser jFileChooser_LOG;
     private javax.swing.JLabel jLabel_Database;
     private javax.swing.JLabel jLabel_Host;
     private javax.swing.JLabel jLabel_JsonFile;
     private javax.swing.JLabel jLabel_LogFile;
-    private javax.swing.JLabel jLabel_Message;
     private javax.swing.JLabel jLabel_Password;
     private javax.swing.JLabel jLabel_Port;
     private javax.swing.JLabel jLabel_TableName;
