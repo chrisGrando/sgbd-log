@@ -985,7 +985,7 @@ public class MainWindow extends javax.swing.JFrame {
         //Aplica as fontes nos elementos da janela
         jTabbedPane.setFont(gentiumPlus.deriveFont(14f)); //Abas
         jTextArea_Console.setFont(cousine.deriveFont(14f)); //Console
-        jTextArea_Query.setFont(lekton.deriveFont(15f)); //Texto SQL
+        jTextArea_Query.setFont(lekton.deriveFont(Font.BOLD, 15f)); //Texto SQL
         jButton_RunQuery.setFont(cousine.deriveFont(Font.BOLD, 18f)); //Executar SQL
         //Rótulos
         jLabel_Host.setFont(aksharUnicode.deriveFont(LABELS));
@@ -1006,21 +1006,21 @@ public class MainWindow extends javax.swing.JFrame {
         jTextField_JsonFile.setFont(cousine.deriveFont(TEXTFIELDS));
         jTextField_LogFile.setFont(cousine.deriveFont(TEXTFIELDS));
         //Botões genéricos
-        jButton_ConnectDB.setFont(cousine.deriveFont(Font.BOLD, 14f));
-        jButton_CreateDB.setFont(cousine.deriveFont(Font.BOLD, 14f));
-        jButton_Simulation.setFont(cousine.deriveFont(Font.BOLD, 17f));
+        jButton_ConnectDB.setFont(lekton.deriveFont(Font.BOLD, 16f));
+        jButton_CreateDB.setFont(lekton.deriveFont(Font.BOLD, 16f));
+        jButton_Simulation.setFont(lekton.deriveFont(Font.BOLD, 20f));
         //Botões de abrir arquivos
         jButton_JsonFile.setFont(cousine.deriveFont(Font.BOLD, 14f));
         jButton_JsonFile.setVerticalAlignment(SwingConstants.TOP);
         jButton_LogFile.setFont(cousine.deriveFont(Font.BOLD, 14f));
         jButton_LogFile.setVerticalAlignment(SwingConstants.TOP);
         //Botões de template de código SQL
-        jButton_TemplateCode1.setFont(cousine.deriveFont(TEMPLATES));
-        jButton_TemplateCode2.setFont(cousine.deriveFont(TEMPLATES));
-        jButton_TemplateCode3.setFont(cousine.deriveFont(TEMPLATES));
-        jButton_TemplateCode4.setFont(cousine.deriveFont(TEMPLATES));
-        jButton_TemplateCode5.setFont(cousine.deriveFont(TEMPLATES));
-        jButton_TemplateCode6.setFont(cousine.deriveFont(TEMPLATES));
+        jButton_TemplateCode1.setFont(lekton.deriveFont(Font.BOLD, TEMPLATES));
+        jButton_TemplateCode2.setFont(lekton.deriveFont(Font.BOLD, TEMPLATES));
+        jButton_TemplateCode3.setFont(lekton.deriveFont(Font.BOLD, TEMPLATES));
+        jButton_TemplateCode4.setFont(lekton.deriveFont(Font.BOLD, TEMPLATES));
+        jButton_TemplateCode5.setFont(lekton.deriveFont(Font.BOLD, TEMPLATES));
+        jButton_TemplateCode6.setFont(lekton.deriveFont(Font.BOLD, TEMPLATES));
     }
     
     //Altera o título da janela
