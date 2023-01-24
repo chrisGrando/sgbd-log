@@ -74,11 +74,13 @@ public class PostgreSQL {
         }
     }
     
-    //Executa comandos de SQL (sem armazenar)
-    public void runQuery(String sql) {
-        TableBehavior tb;
+    //Executa comandos de SQL
+    public List<String[]> runQuery(String sql) {
         Statement st;
         ResultSet rs = null;
+        TableBehavior tb;
+        List<Object[]> objQuery;
+        List<String[]> strQuery = null;
         
         try {
             //Executa query no Postgres
@@ -93,8 +95,8 @@ public class PostgreSQL {
                 
                 //Executa leitura do output do query
                 tb = new TableBehavior();
-                List<Object[]> objQuery = tb.generateListFromQuery(rs);
-                List<String[]> strQuery = tb.convertTableToString(objQuery);
+                objQuery = tb.generateListFromQuery(rs);
+                strQuery = tb.convertTableToString(objQuery);
 
                 //Exibe output do query
                 System.out.println("*** QUERY ***");
@@ -120,40 +122,9 @@ public class PostgreSQL {
             System.err.println(sql + "\n");
             System.out.println(msg); //Mensagem no console normal
         }
-    }
-    
-    //Executa consulta e armazena saída em array de objetos
-    public List<Object[]> getDataFromQuery(String sql) {
-        List<Object[]> objList = null;
-        TableBehavior tb;
-        Statement st;
-        ResultSet rs;
         
-        try {
-            //Executa query no Postgres
-            st = this.connection.createStatement();
-            rs = st.executeQuery(sql);
-            
-            //Checa se houve retorno no query
-            if(rs.next()) {               
-                //Armazena resultados
-                tb = new TableBehavior();
-                objList = tb.generateListFromQuery(rs);
-            }
-            
-            //Encerra query
-            rs.close();
-            st.close();
-        }
-        catch (SQLException error) {
-            String msg = "[AVISO] Não foi possível armazenar os dados...";
-            Logger.getGlobal().log(Level.WARNING, msg, error);
-            System.err.println("*** COMANDO ***");
-            System.err.println(sql + "\n");
-            System.out.println(msg); //Mensagem no console normal
-        }
-        
-        return objList;
+        //Retorna dados do query (se houverem)
+        return strQuery;
     }
     
     //Encerra a conexão atual

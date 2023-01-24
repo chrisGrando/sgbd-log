@@ -3,34 +3,41 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.projects.araucaria</groupId>
     <artifactId>sgbd-log</artifactId>
-    <version>1.0-BETA</version>
     <packaging>jar</packaging>
+    <!-- Bibliotecas externas -->
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.5.1</version>
+            <version>[42.5.1,)</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.14.1</version>
+            <version>[2.14.1,)</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.14.1</version>
+            <version>[2.14.1,)</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>2.14.1</version>
+            <version>[2.14.1,)</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>[5.7.1,)</version>
         </dependency>
     </dependencies>
+    <!-- Configurações do projeto (codificação, versão do Java, classe da função "main", etc) -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -38,21 +45,23 @@
         <maven.compiler.target>17</maven.compiler.target>
         <exec.mainClass>app.Main</exec.mainClass>
     </properties>
+    <!-- Plugins e configurações de compilação -->
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <!-- Plugin para copiar recursos do código fonte para dentro do arquivo executável -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.0</version>
                 <executions>
                     <execution>
-                        <id>copy-resources</id>
+                        <id>copy-files</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/target/classes</outputDirectory>                    
+                            <outputDirectory>${basedir}/target</outputDirectory>
                             <includeEmptyDirs>true</includeEmptyDirs>
                             <resources>
                                 <resource>
@@ -70,13 +79,14 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Plugin para compilar o arquivo JAR com dependências -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>app.Main</mainClass>
+                            <mainClass>${exec.mainClass}</mainClass>
                             <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
                         </manifest>
                     </archive>
@@ -86,18 +96,94 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <!-- this is used for inheritance merges -->
                         <id>make-assembly</id>
-                        <!-- bind to the packaging phase -->
-                        <phase>package</phase> 
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+            <!-- Plugin para gerar executável do Windows (.exe) -->
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>2.3.1</version>
+                <executions>
+                    <!-- Versão de 32-bit -->
+                    <execution>
+                        <id>32-bit-binary</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>${basedir}/target/${project.artifactId}-x32.exe</outfile>
+                            <jar>${project.artifactId}.jar</jar>
+                            <cmdLine>-gui</cmdLine>
+                            <chdir>.</chdir>
+                            <dontWrapJar>true</dontWrapJar>
+                            <stayAlive>true</stayAlive>
+                            <icon>${basedir}/target/classes/app/gui/resources/icon/PROJECT.ico</icon>
+                            <disableVersionInfoDefaults>false</disableVersionInfoDefaults>
+                            <jre>
+                                <path>jre</path>
+                                <minVersion>17</minVersion>
+                                <requires64Bit>false</requires64Bit>
+                            </jre>
+                            <versionInfo>
+                                <productName>${project.name}</productName>
+                                <companyName>${project.groupId}</companyName>
+                                <trademarks>${project.groupId}</trademarks>
+                                <txtFileVersion>v${project.version}</txtFileVersion>
+                                <txtProductVersion>v${project.version}</txtProductVersion>
+                                <originalFilename>${project.artifactId}.exe</originalFilename>
+                                <copyright>Copyright © ${currentYear} ${project.groupId}. All rights reserved.</copyright>
+                                <language>PORTUGUESE_BRAZIL</language>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                    <!-- Versão de 64-bit -->
+                    <execution>
+                        <id>64-bit-binary</id>
+                        <phase>install</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>gui</headerType>
+                            <outfile>${basedir}/target/${project.artifactId}-x64.exe</outfile>
+                            <jar>${project.artifactId}.jar</jar>
+                            <cmdLine>-gui</cmdLine>
+                            <chdir>.</chdir>
+                            <dontWrapJar>true</dontWrapJar>
+                            <stayAlive>true</stayAlive>
+                            <icon>${basedir}/target/classes/app/gui/resources/icon/PROJECT.ico</icon>
+                            <disableVersionInfoDefaults>false</disableVersionInfoDefaults>
+                            <jre>
+                                <path>jre</path>
+                                <minVersion>17</minVersion>
+                                <requires64Bit>true</requires64Bit>
+                            </jre>
+                            <versionInfo>
+                                <productName>${project.name}</productName>
+                                <companyName>${project.groupId}</companyName>
+                                <trademarks>${project.groupId}</trademarks>
+                                <txtFileVersion>v${project.version}</txtFileVersion>
+                                <txtProductVersion>v${project.version}</txtProductVersion>
+                                <originalFilename>${project.artifactId}.exe</originalFilename>
+                                <copyright>Copyright © ${currentYear} ${project.groupId}. All rights reserved.</copyright>
+                                <language>PORTUGUESE_BRAZIL</language>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
+    <!-- Descrição do projeto (nome, versão, e um breve resumo sobre o software) -->
     <name>SGBD Log</name>
+    <version>1.1-STABLE</version>
     <description>Trabalho Prático - Banco de Dados II</description>
 </project>
