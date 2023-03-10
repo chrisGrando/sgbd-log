@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>io.projects.araucaria</groupId>
     <artifactId>sgbd-log</artifactId>
     <packaging>jar</packaging>
     <!-- Bibliotecas externas -->
@@ -131,17 +130,10 @@
                                 <path>jre</path>
                                 <minVersion>17</minVersion>
                                 <requires64Bit>false</requires64Bit>
+                                <opts>
+                                    <opt>-Dfile.encoding=UTF8</opt>
+                                </opts>
                             </jre>
-                            <versionInfo>
-                                <productName>${project.name}</productName>
-                                <companyName>${project.groupId}</companyName>
-                                <trademarks>${project.groupId}</trademarks>
-                                <txtFileVersion>v${project.version}</txtFileVersion>
-                                <txtProductVersion>v${project.version}</txtProductVersion>
-                                <originalFilename>${project.artifactId}.exe</originalFilename>
-                                <copyright>Copyright © ${currentYear} ${project.groupId}. All rights reserved.</copyright>
-                                <language>PORTUGUESE_BRAZIL</language>
-                            </versionInfo>
                         </configuration>
                     </execution>
                     <!-- Versão de 64-bit -->
@@ -165,25 +157,24 @@
                                 <path>jre</path>
                                 <minVersion>17</minVersion>
                                 <requires64Bit>true</requires64Bit>
+                                <opts>
+                                    <opt>-Dfile.encoding=UTF8</opt>
+                                </opts>
                             </jre>
-                            <versionInfo>
-                                <productName>${project.name}</productName>
-                                <companyName>${project.groupId}</companyName>
-                                <trademarks>${project.groupId}</trademarks>
-                                <txtFileVersion>v${project.version}</txtFileVersion>
-                                <txtProductVersion>v${project.version}</txtProductVersion>
-                                <originalFilename>${project.artifactId}.exe</originalFilename>
-                                <copyright>Copyright © ${currentYear} ${project.groupId}. All rights reserved.</copyright>
-                                <language>PORTUGUESE_BRAZIL</language>
-                            </versionInfo>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
-    <!-- Descrição do projeto (nome, versão, e um breve resumo sobre o software) -->
+    <!-- Descrição do projeto (nome, versão, ID da empresa, descrição, ano de início, nome da empresa, URL do software) -->
     <name>SGBD Log</name>
     <version>1.2-FINAL</version>
+    <groupId>io.projects.araucaria</groupId>
     <description>Trabalho Prático - Banco de Dados II</description>
+    <inceptionYear>2022</inceptionYear>
+    <organization>
+        <name>Araucaria Projects</name>
+        <url>https://github.com/chrisGrando/sgbd-log</url>
+    </organization>
 </project>
