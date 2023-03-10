@@ -184,6 +184,6 @@
     </build>
     <!-- Descrição do projeto (nome, versão, e um breve resumo sobre o software) -->
     <name>SGBD Log</name>
-    <version>1.1-STABLE</version>
+    <version>1.2-FINAL</version>
     <description>Trabalho Prático - Banco de Dados II</description>
 </project>
