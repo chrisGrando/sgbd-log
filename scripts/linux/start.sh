@@ -1,11 +1,29 @@
 #!/bin/bash
 
-# Global variables
+#   /$$$$$$                         /$$$$$  /$$$$$$  /$$      
+#  /$$__  $$                       |__  $$ /$$__  $$| $$      
+# | $$  \__/  /$$$$$$  /$$$$$$$       | $$| $$  \ $$| $$      
+# | $$ /$$$$ /$$__  $$| $$__  $$      | $$| $$$$$$$$| $$      
+# | $$|_  $$| $$$$$$$$| $$  \ $$ /$$  | $$| $$__  $$| $$      
+# | $$  \ $$| $$_____/| $$  | $$| $$  | $$| $$  | $$| $$      
+# |  $$$$$$/|  $$$$$$$| $$  | $$|  $$$$$$/| $$  | $$| $$$$$$$$
+#  \______/  \_______/|__/  |__/ \______/ |__/  |__/|________/
+# ------------------------------------------------------------
+# 
+# Generic Java Application Launcher
+# Version: PROTOTYPE ~ 11/04/2023
+# Author: @chrisGrando
+
+### VARIABLES ###
+
 SHELL_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 CUSTOM_JRE="$SHELL_PATH/jre/bin/java"
-JRE="/bin/java"
+JRE=""
 JVM_ARGS=""
 APP_ARGS=""
+JAR="*.jar"
+
+### MAIN SCRIPT ###
 
 # Identify which parameters are for the JVM and which are for the application
 while [ $# -gt 0 ] ; do
@@ -26,24 +44,48 @@ fi
 if test -f $CUSTOM_JRE ; then
     # Set custom paths
     export PATH="$PATH:$SHELL_PATH/jre/bin"
-    export JAVA_HOME=$SHELL_PATH/jre
-    JRE=$CUSTOM_JRE
+    export JAVA_HOME="$SHELL_PATH/jre"
+    export java=$CUSTOM_JRE
+    JRE=$java
 
     # Print custom JRE version
+    echo "*******************************************************************"
+    echo "[INFO] Using bundled JRE!"
     echo "*******************************************************************"
     exec $JRE -version &
     wait $!
     echo "*******************************************************************\n"
+
+# If no bundled JRE was found, check if java is globally available in the system
+elif command -v java &> /dev/null ; then
+    # Use global path
+    JRE="/bin/java"
+
+    # Print global JRE version
+    echo "*******************************************************************"
+    echo "[INFO] Using global JRE!"
+    echo "*******************************************************************"
+    exec java -version &
+    wait $!
+    echo "*******************************************************************\n"
+
+# Terminate script with error code if java was not found
+else
+    echo "[FATAL] Java (JRE) not found..."
+    exit 1
 fi
 
 # Search for any ".jar" file in the folder
-JAR_FILE="$(find $SHELL_PATH -maxdepth 1 -name "*.jar" | head -n 1)"
+jar_file="$(find $SHELL_PATH -maxdepth 1 -name $JAR | head -n 1)"
 
-# Launch application (if any ".jar" file was found)
-if [ "$JAR_FILE" != "" ] ; then
-    exec $JRE $JVM_ARGS -jar $JAR_FILE $APP_ARGS &
+# Launch application if any ".jar" file was found
+if [ "$jar_file" != "" ] ; then
+    exec $JRE $JVM_ARGS -jar $jar_file $APP_ARGS &
     wait $!
+
+# Terminate script with error code otherwise
 else
-    echo "JAR file not found..."
+    echo "[FATAL] JAR file not found..."
+    exit 1
 fi
 
