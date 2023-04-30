@@ -12,13 +12,20 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Windows PowerShell Edition
-# Version: PROTOTYPE ~ 28/04/2023
+# Version: PROTOTYPE ~ 2023/04/29
 # Author: @chrisGrando
 # ****************************************************************************************************
 
+#### COMMAND LINE PARAMETERS FIELD ####
+
+param (
+	[Parameter(Mandatory=$true)]
+	[string] $projectAbsolutePath
+)
+
 #### IMPORT FIELD ####
 
-# <Insert import here>
+Import-Module -Name "$projectAbsolutePath/scripts/windows/Export-Compress.psm1" #-Verbose
 
 #### GLOBAL VARIABLES FIELD ####
 
@@ -32,17 +39,23 @@ New-Variable -Name WPS_VERSION -Value ([double] "$($PSVersionTable.PSVersion.Maj
 
 # NOT Constants
 $currentOption = 0
+$maxOptionNumber = 4
 $cursorLeft = ""
 $cursorRight = ""
 
 #### FUNCTIONS FIELD ####
 
-# Waits for the user to press any key to exit
+# Wait for the user to press [any key] to exit
 function WaitAndExit {
 	Write-Host "`n*** END OF SCRIPT ***"
 	Write-Host "Press any key to exit..."
 	$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
 	exit 0
+}
+
+# Execute Apache Maven to perform an "clean install"
+function BuildMavenProject {
+	WaitAndExit
 }
 
 # Erase Windows icon (.ico) file cache
@@ -52,6 +65,7 @@ function ClearIconCache {
 
 # Export project and compress as 7z, zip or tar.xz
 function ExportAndCompress {
+	Set-KeyMap $KEY_UP $KEY_DOWN $KEY_LEFT $KEY_RIGHT $KEY_SPACEBAR
 	WaitAndExit
 }
 
@@ -59,9 +73,9 @@ function ExportAndCompress {
 
 # Check if Windows PowerShell version is below 5.1 (and abort the script in case that is true)
 if ($WPS_VERSION -lt 5.1) {
-    Write-Error "Your version of Windows PowerShell ($WPS_VERSION) is incompatible. Please upgrade to version 5.1 or above."
+	Write-Error "[FATAL] Your version of Windows PowerShell ($WPS_VERSION) is incompatible. Please upgrade to version 5.1 or above."
 	cmd /c pause
-    exit 1
+	exit 1
 }
 
 # Main loop
@@ -110,7 +124,7 @@ while ($true) {
 	
 	$option_2 = "$($cursorLeft)[2]$($cursorRight) Clear icon cache"
 	
-	# 3) Quit
+	# 3) Build project
 	if ($currentOption -eq 2) {
 		$cursorLeft = "=>"
 		$cursorRight = "<="
@@ -120,21 +134,32 @@ while ($true) {
 		$cursorRight = "  "
 	}
 	
-	$option_3 = "$($cursorLeft)[3]$($cursorRight) Quit"
+	$option_3 = "$($cursorLeft)[3]$($cursorRight) Build project"
+	
+	# 4) Quit
+	if ($currentOption -eq 3) {
+		$cursorLeft = "=>"
+		$cursorRight = "<="
+	}
+	else {
+		$cursorLeft = "  "
+		$cursorRight = "  "
+	}
+	
+	$option_4 = "$($cursorLeft)[4]$($cursorRight) Quit"
 	
 	# Render options text
 	Write-Host $option_1
 	Write-Host $option_2
 	Write-Host $option_3
+	Write-Host $option_4
 	Write-Host "-----------------------------------------------------------"
 	Write-Host "CONTROLS:"
-	Write-Host " * [Arrow UP] or [Arrow LEFT] ======> Move cursor UP"
-	Write-Host " * [Arrow DOWN] or [Arrow RIGHT] ===> Move cursor DOWN"
-	Write-Host " * [SPACE] =========================> Select option"
+	Write-Host " * [Arrow Keys] ===> Move cursor"
+	Write-Host " * [SPACE] ========> Select option"
 	
 	# Manage keyboard input
 	$key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
-	$maxOptionNumber = 3
 	
 	# Up or Left key
 	if ($key.VirtualKeyCode -eq $KEY_UP -Or $key.VirtualKeyCode -eq $KEY_LEFT) {
@@ -171,13 +196,17 @@ switch ($currentOption) {
 	1 {
 		ClearIconCache
 	}
-	# Quit
+	# Build project
 	2 {
+		BuildMavenProject
+	}
+	# Quit
+	3 {
 		WaitAndExit
 	}
 	# Invalid
 	default {
-		Write-Error "`nSelected option is invalid. Aborting..."
+		Write-Error "`n[FATAL] Selected option is invalid. Aborting..."
 		$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
 		exit 1
 	}

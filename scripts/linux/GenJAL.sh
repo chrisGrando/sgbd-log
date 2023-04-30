@@ -11,7 +11,7 @@
 # ------------------------------------------------------------
 # 
 # Generic Java Application Launcher
-# Version: PROTOTYPE ~ 11/04/2023
+# Version: PROTOTYPE ~ 2023/04/11
 # Author: @chrisGrando
 
 ### VARIABLES ###
