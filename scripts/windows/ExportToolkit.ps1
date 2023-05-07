@@ -12,7 +12,7 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Windows PowerShell Edition
-# Version: PROTOTYPE ~ 2023/04/29
+# Version: PROTOTYPE ~ 2023/05/07
 # Author: @chrisGrando
 # ****************************************************************************************************
 
@@ -25,7 +25,7 @@ param (
 
 #### IMPORT FIELD ####
 
-Import-Module -Name "$projectAbsolutePath/scripts/windows/Export-Compress.psm1" #-Verbose
+Import-Module -Name "$projectAbsolutePath/scripts/windows/Export-Compress.psm1"
 
 #### GLOBAL VARIABLES FIELD ####
 
@@ -55,18 +55,17 @@ function WaitAndExit {
 
 # Execute Apache Maven to perform an "clean install"
 function BuildMavenProject {
-	WaitAndExit
+	
 }
 
 # Erase Windows icon (.ico) file cache
 function ClearIconCache {
-	WaitAndExit
+	
 }
 
 # Export project and compress as 7z, zip or tar.xz
 function ExportAndCompress {
 	Set-KeyMap $KEY_UP $KEY_DOWN $KEY_LEFT $KEY_RIGHT $KEY_SPACEBAR
-	WaitAndExit
 }
 
 #### MAIN CODE FIELD ####
@@ -191,14 +190,17 @@ switch ($currentOption) {
 	# Export & Compress
 	0 {
 		ExportAndCompress
+		WaitAndExit
 	}
 	# Clear icon cache
 	1 {
 		ClearIconCache
+		WaitAndExit
 	}
 	# Build project
 	2 {
 		BuildMavenProject
+		WaitAndExit
 	}
 	# Quit
 	3 {
