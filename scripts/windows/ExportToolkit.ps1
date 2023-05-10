@@ -12,7 +12,7 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Windows PowerShell Edition
-# Version: PROTOTYPE ~ 2023/05/09
+# Version: PROTOTYPE ~ 2023/05/10
 # Author: @chrisGrando
 # ****************************************************************************************************
 
@@ -50,6 +50,8 @@ New-Variable -Name KEY_DOWN -Value 40 -Option Constant
 New-Variable -Name KEY_LEFT -Value 37 -Option Constant
 New-Variable -Name KEY_RIGHT -Value 39 -Option Constant
 New-Variable -Name KEY_SPACEBAR -Value 32 -Option Constant
+New-Variable -Name KEY_Y -Value 89 -Option Constant
+New-Variable -Name KEY_N -Value 78 -Option Constant
 
 # NOT Constants
 New-Variable -Name currentOption -Value 0
@@ -74,8 +76,6 @@ function Invoke-BuildMavenProject {
 
 # Erase Windows icon (.ico) file cache
 function Invoke-ClearIconCache {
-	$KEY_Y = 89
-	$KEY_N = 78
 	$proceed = $false
 	
 	# Warn the user
@@ -110,8 +110,8 @@ function Invoke-ClearIconCache {
 # Export project and compress as 7z, zip or tar.xz
 function Invoke-ExportAndCompress {
 	Set-KeyMap $KEY_UP $KEY_DOWN $KEY_LEFT $KEY_RIGHT $KEY_SPACEBAR
-	Set-GameFolder
-	Set-GameVersion
+	Set-AppFolder
+	Set-AppVersion
 	Invoke-MenuPlatforms
 	Invoke-MenuCompression
 	Start-Exporting $projectAbsolutePath "export"
@@ -132,7 +132,7 @@ while ($true) {
 	Write-Host "          | |                                              "
 	Write-Host "          |_|                                              "
 	Write-Host "***********************************************************"
-	Write-Host "    Windows PowerShell Edition ~ PROTOTYPE - 2023/05/09"
+	Write-Host "    Windows PowerShell Edition ~ PROTOTYPE - 2023/05/10"
 	Write-Host "                   Author:  @chrisGrando"
 	Write-Host "               Using PowerShell version: $WPS_VERSION"
 	Write-Host "***********************************************************"
@@ -197,7 +197,7 @@ while ($true) {
 	Write-Host "-----------------------------------------------------------"
 	Write-Host "CONTROLS:"
 	Write-Host " * [Arrow Keys] ===> Move cursor"
-	Write-Host " * [SPACE] ========> Select option"
+	Write-Host " * [SPACEBAR] =====> Select option"
 	
 	# Manage keyboard input
 	$key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyUp')

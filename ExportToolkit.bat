@@ -13,7 +13,7 @@
 ::                   |__/                                                                              
 :: ****************************************************************************************************
 :: ExportToolkit ~ Windows Batch Launcher
-:: Version: PROTOTYPE ~ 2023/05/09
+:: Version: PROTOTYPE ~ 2023/05/10
 :: Author: @chrisGrando
 :: ****************************************************************************************************
 :: NOTE: Since Windows blocks the execution of PowerShell scripts by default, this batch script works
