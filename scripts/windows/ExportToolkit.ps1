@@ -12,7 +12,7 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Windows PowerShell Edition
-# Version: PROTOTYPE ~ 2023/05/07
+# Version: PROTOTYPE ~ 2023/05/09
 # Author: @chrisGrando
 # ****************************************************************************************************
 
@@ -23,9 +23,24 @@ param (
 	[string] $projectAbsolutePath
 )
 
+# Replace every "\" character by "/"
+$projectAbsolutePath = $projectAbsolutePath -Replace '\\', '/'
+
+#### VERSION CHECK FIELD ####
+
+# Get Windows PowerShell current version
+New-Variable -Name WPS_VERSION -Value ([double] "$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor)") -Option Constant
+
+# Check if PowerShell version is below 5.1 (and abort the script in case that is true)
+if ($WPS_VERSION -lt 5.1) {
+	Write-Error "[FATAL] Your version of Windows PowerShell ($WPS_VERSION) is incompatible. Please upgrade to version 5.1 or above."
+	cmd /c pause
+	exit 1
+}
+
 #### IMPORT FIELD ####
 
-Import-Module -Name "$projectAbsolutePath/scripts/windows/Export-Compress.psm1"
+Import-Module -Name "$($projectAbsolutePath)scripts/windows/Export-Compress.psm1"
 
 #### GLOBAL VARIABLES FIELD ####
 
@@ -35,47 +50,74 @@ New-Variable -Name KEY_DOWN -Value 40 -Option Constant
 New-Variable -Name KEY_LEFT -Value 37 -Option Constant
 New-Variable -Name KEY_RIGHT -Value 39 -Option Constant
 New-Variable -Name KEY_SPACEBAR -Value 32 -Option Constant
-New-Variable -Name WPS_VERSION -Value ([double] "$($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor)") -Option Constant
 
 # NOT Constants
-$currentOption = 0
-$maxOptionNumber = 4
-$cursorLeft = ""
-$cursorRight = ""
+New-Variable -Name currentOption -Value 0
+New-Variable -Name maxOptionNumber -Value 4
+New-Variable -Name cursorLeft -Value ""
+New-Variable -Name cursorRight -Value ""
 
 #### FUNCTIONS FIELD ####
 
 # Wait for the user to press [any key] to exit
-function WaitAndExit {
+function Invoke-WaitAndExit {
 	Write-Host "`n*** END OF SCRIPT ***"
 	Write-Host "Press any key to exit..."
-	$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+	$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 	exit 0
 }
 
 # Execute Apache Maven to perform an "clean install"
-function BuildMavenProject {
+function Invoke-BuildMavenProject {
 	
 }
 
 # Erase Windows icon (.ico) file cache
-function ClearIconCache {
+function Invoke-ClearIconCache {
+	$KEY_Y = 89
+	$KEY_N = 78
+	$proceed = $false
 	
+	# Warn the user
+	Write-Host "`n***********************************************************`n"
+	Write-Host "[WARNING] The following operation may close all currently open windows."
+	Write-Host "Do you wish to proceed? (Y / N)"
+	
+	# Loops until the user press "Y" or "N"
+	while ($true) {
+		# Keyboard input
+		$key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+		
+		# User chose "yes"
+		if ($key.VirtualKeyCode -eq $KEY_Y) {
+			$proceed = $true
+			break
+		}
+		
+		# User chose "no"
+		if ($key.VirtualKeyCode -eq $KEY_N) {
+			break
+		}
+	}
+	
+	# Check if the user allowed script to continue
+	if ($proceed) {
+		Write-Host "`nPlease wait..."
+		cmd /c call "$($projectAbsolutePath)scripts/windows/ResetIconCache.bat"
+	}
 }
 
 # Export project and compress as 7z, zip or tar.xz
-function ExportAndCompress {
+function Invoke-ExportAndCompress {
 	Set-KeyMap $KEY_UP $KEY_DOWN $KEY_LEFT $KEY_RIGHT $KEY_SPACEBAR
+	Set-GameFolder
+	Set-GameVersion
+	Invoke-MenuPlatforms
+	Invoke-MenuCompression
+	Start-Exporting $projectAbsolutePath "export"
 }
 
 #### MAIN CODE FIELD ####
-
-# Check if Windows PowerShell version is below 5.1 (and abort the script in case that is true)
-if ($WPS_VERSION -lt 5.1) {
-	Write-Error "[FATAL] Your version of Windows PowerShell ($WPS_VERSION) is incompatible. Please upgrade to version 5.1 or above."
-	cmd /c pause
-	exit 1
-}
 
 # Main loop
 while ($true) {
@@ -90,7 +132,7 @@ while ($true) {
 	Write-Host "          | |                                              "
 	Write-Host "          |_|                                              "
 	Write-Host "***********************************************************"
-	Write-Host "    Windows PowerShell Edition ~ PROTOTYPE - 28/04/2023"
+	Write-Host "    Windows PowerShell Edition ~ PROTOTYPE - 2023/05/09"
 	Write-Host "                   Author:  @chrisGrando"
 	Write-Host "               Using PowerShell version: $WPS_VERSION"
 	Write-Host "***********************************************************"
@@ -158,14 +200,14 @@ while ($true) {
 	Write-Host " * [SPACE] ========> Select option"
 	
 	# Manage keyboard input
-	$key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+	$key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyUp')
 	
 	# Up or Left key
 	if ($key.VirtualKeyCode -eq $KEY_UP -Or $key.VirtualKeyCode -eq $KEY_LEFT) {
 		if ($currentOption -le 0) {
 			$currentOption = $maxOptionNumber
 		}
-		$currentOption--;
+		$currentOption--
 	}
 	
 	# Down or Right key
@@ -173,7 +215,7 @@ while ($true) {
 		if ($currentOption -ge ($maxOptionNumber - 1)) {
 			$currentOption = -1
 		}
-		$currentOption++;
+		$currentOption++
 	}
 	
 	# Spacebar key
@@ -181,7 +223,7 @@ while ($true) {
 		break
 	}
 	
-	# Clear all screen
+	# Clear all screen and restart loop
 	clear
 }
 
@@ -189,27 +231,27 @@ while ($true) {
 switch ($currentOption) {
 	# Export & Compress
 	0 {
-		ExportAndCompress
-		WaitAndExit
+		Invoke-ExportAndCompress
+		Invoke-WaitAndExit
 	}
 	# Clear icon cache
 	1 {
-		ClearIconCache
-		WaitAndExit
+		Invoke-ClearIconCache
+		Invoke-WaitAndExit
 	}
 	# Build project
 	2 {
-		BuildMavenProject
-		WaitAndExit
+		Invoke-BuildMavenProject
+		Invoke-WaitAndExit
 	}
 	# Quit
 	3 {
-		WaitAndExit
+		Invoke-WaitAndExit
 	}
 	# Invalid
 	default {
 		Write-Error "`n[FATAL] Selected option is invalid. Aborting..."
-		$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown');
+		$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
 		exit 1
 	}
 }

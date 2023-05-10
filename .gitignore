@@ -23,4 +23,5 @@ buildNumber.properties
 
 ### Project ###
 output/
+export/
 *.psd1

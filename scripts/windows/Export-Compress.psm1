@@ -14,13 +14,14 @@
 
 #### MODULE MANIFEST FIELD ####
 
+$modulePath = $PSScriptRoot -replace '\\', '/'
 $moduleName = "Export-Compress"
-$moduleVersion = "2023.05.07"
+$moduleVersion = "2023.05.09"
 $moduleAuthor = "chrisGrando"
 $moduleCompany = "Araucaria Projects"
 $moduleDescription = "Module to export project binaries and compress then as 7z, zip or tar.xz."
 
-New-ModuleManifest -Path "$PSScriptRoot\$moduleName.psd1" `
+New-ModuleManifest -Path "$modulePath/$moduleName.psd1" `
 	-RootModule $moduleName `
 	-ModuleVersion $moduleVersion `
 	-Author $moduleAuthor `
@@ -30,30 +31,30 @@ New-ModuleManifest -Path "$PSScriptRoot\$moduleName.psd1" `
 #### GLOBAL VARIABLES FIELD ####
 
 # Keyboard controls
-$VK_UP = $null
-$VK_DOWN = $null
-$VK_LEFT = $null
-$VK_RIGHT = $null
-$VK_SPACEBAR = $null
+New-Variable -Name VK_UP -Value $null
+New-Variable -Name VK_DOWN -Value $null
+New-Variable -Name VK_LEFT -Value $null
+New-Variable -Name VK_RIGHT -Value $null
+New-Variable -Name VK_SPACEBAR -Value $null
 
 # The game folder name with version
-$GAME_FOLDER = "jSTG"
-$GAME_VERSION = "1.0"
+New-Variable -Name GAME_FOLDER -Value "jSTG"
+New-Variable -Name GAME_VERSION -Value "1.0"
 
 # Platforms to export
-$SELECT_ALL = $false
-$WINDOWS_x86 = $false
-$WINDOWS_x64 = $false
-$LINUX_i386 = $false
-$LINUX_amd64 = $false
-$JAR_ONLY = $false
+New-Variable -Name SELECT_ALL -Value $false
+New-Variable -Name WINDOWS_x86 -Value $false
+New-Variable -Name WINDOWS_x64 -Value $false
+New-Variable -Name LINUX_i386 -Value $false
+New-Variable -Name LINUX_amd64 -Value $false
+New-Variable -Name JAR_ONLY -Value $false
 
 # Compression option
 New-Variable -Name COMPRESS_7Z -Value 0 -Option Constant
 New-Variable -Name COMPRESS_ZIP -Value 1 -Option Constant
 New-Variable -Name COMPRESS_ZIP_TAR_XZ -Value 2 -Option Constant
 New-Variable -Name COMPRESS_NONE -Value 3 -Option Constant
-$COMPRESS_OPTION = $null
+New-Variable -Name COMPRESS_OPTION -Value $null
 
 #### FUNCTIONS FIELD ####
 
@@ -69,21 +70,32 @@ function Set-KeyMap {
 	)
 	
 	# Set key map
-	$VK_UP = $up
-	$VK_DOWN = $down
-	$VK_LEFT = $left
-	$VK_RIGHT = $right
-	$VK_SPACEBAR = $spacebar
+	Set-Variable -Name VK_UP -Value $up -Scope "Script"
+	Set-Variable -Name VK_DOWN -Value $down -Scope "Script"
+	Set-Variable -Name VK_LEFT -Value $left -Scope "Script"
+	Set-Variable -Name VK_RIGHT -Value $right -Scope "Script"
+	Set-Variable -Name VK_SPACEBAR -Value $spacebar -Scope "Script"
 }
 
 # Set the game's (partial) folder name
 function Set-GameFolder {
-	
+	clear
+	Write-Host "Please enter the game folder name."
+	Write-Host "(Tip: Use something short and without spaces)"
+	Write-Host "Examples: TouHou_GemumeiNoRei, TH_GameNameExample, TH_GNE."
+	Write-Host "***********************************************************"
+	$input = Read-Host ">"
+	Set-Variable -Name GAME_FOLDER -Value $input -Scope "Script"
 }
 
 # Set the game version (used in game's final folder name)
 function Set-GameVersion {
-	
+	clear
+	Write-Host "Please enter the game version."
+	Write-Host "Examples: 1.0, 1.1.2a, 0.1-DEMO, 0.3.1-TRIAL"
+	Write-Host "***********************************************************"
+	$input = Read-Host ">"
+	Set-Variable -Name GAME_VERSION -Value $input -Scope "Script"
 }
 
 # Menu to select the platforms for exporting
@@ -98,7 +110,20 @@ function Invoke-MenuCompression {
 
 # Execute the exporting process
 function Start-Exporting {
+	[CmdletBinding()]
+	param (
+		[parameter(mandatory)] [string] $rootFolder,
+		[parameter(mandatory)] [string] $exportFolderName
+	)
 	
+	# The path where the exported files goes to
+	$exportPath = "$($rootFolder)$($exportFolderName)"
+	$finalGameFolder = "$($GAME_FOLDER)_v$($GAME_VERSION)"
+	
+	# TODO: Remove debug info and implement actual function code
+	clear
+	Write-Host "Export path: $exportPath"
+	Write-Host "Final game folder: $finalGameFolder"
 }
 
 #### EXPORT FUNCTIONS FIELD ####
