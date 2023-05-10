@@ -349,12 +349,97 @@ function Invoke-MenuCompression {
 	$cursorRight = ""
 	
 	# Menu loop
-	# while ($true) {
-	# 	clear
-	# 	Write-Host "-----------------------------------------------------------"
-	# 	Write-Host "Select an option below:"
-	# 	Write-Host "-----------------------------------------------------------"
-	# }
+	while ($true) {
+		clear
+		Write-Host "-----------------------------------------------------------"
+		Write-Host "Select an compression method to package the binaries:"
+		Write-Host "-----------------------------------------------------------"
+		
+		# Menu options + cursor
+		
+		# 1) Everything as 7z
+		if ($currentOption -eq 0) {
+			$cursorLeft = "=>"
+			$cursorRight = "<="
+		}
+		else {
+			$cursorLeft = "  "
+			$cursorRight = "  "
+		}
+		
+		$option_1 = "$($cursorLeft)[1]$($cursorRight) Everything as 7z (recommended)"
+		
+		# 2) Everything as zip
+		if ($currentOption -eq 1) {
+			$cursorLeft = "=>"
+			$cursorRight = "<="
+		}
+		else {
+			$cursorLeft = "  "
+			$cursorRight = "  "
+		}
+		
+		$option_2 = "$($cursorLeft)[2]$($cursorRight) Everything as zip"
+		
+		# 3) Jar and Windows builds as zip, everything else as tar.xz
+		if ($currentOption -eq 2) {
+			$cursorLeft = "=>"
+			$cursorRight = "<="
+		}
+		else {
+			$cursorLeft = "  "
+			$cursorRight = "  "
+		}
+		
+		$option_3 = "$($cursorLeft)[3]$($cursorRight) Jar and Windows builds as zip, everything else as tar.xz"
+		
+		# 4) Don't compress anything
+		if ($currentOption -eq 3) {
+			$cursorLeft = "=>"
+			$cursorRight = "<="
+		}
+		else {
+			$cursorLeft = "  "
+			$cursorRight = "  "
+		}
+		
+		$option_4 = "$($cursorLeft)[4]$($cursorRight) Don't compress anything"
+		
+		# Render options text
+		Write-Host $option_1
+		Write-Host $option_2
+		Write-Host $option_3
+		Write-Host $option_4
+		Write-Host "-----------------------------------------------------------"
+		Write-Host "CONTROLS:"
+		Write-Host " * [Arrow Keys] ===> Move cursor"
+		Write-Host " * [SPACEBAR] =====> Select option"
+		
+		# Manage keyboard input
+		$key = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyUp')
+		
+		# Up or Left key
+		if ($key.VirtualKeyCode -eq $VK_UP -Or $key.VirtualKeyCode -eq $VK_LEFT) {
+			if ($currentOption -le 0) {
+				$currentOption = $maxOptionNumber
+			}
+			$currentOption--
+		}
+		
+		# Down or Right key
+		if ($key.VirtualKeyCode -eq $VK_DOWN -Or $key.VirtualKeyCode -eq $VK_RIGHT) {
+			if ($currentOption -ge ($maxOptionNumber - 1)) {
+				$currentOption = -1
+			}
+			$currentOption++
+		}
+		
+		# Spacebar key
+		if ($key.VirtualKeyCode -eq $VK_SPACEBAR) {
+			Set-Variable -Name COMPRESS_OPTION -Value $currentOption -Scope "Script"
+			break
+		}
+	}
 }
 
 # Execute the exporting process
@@ -367,12 +452,13 @@ function Start-Exporting {
 	
 	# The path where the exported files goes to
 	$exportPath = "$($rootFolder)$($exportFolderName)"
-	$finalAppFolder = "$($APP_FOLDER)_v$($APP_VERSION)"
+	$appNameWithVersion = "$($APP_FOLDER)_v$($APP_VERSION)"
+	$finalFolderName = ""
 	
 	# TODO: Remove debug info and implement actual function code
 	clear
 	Write-Host "Export path: $exportPath"
-	Write-Host "Final app folder: $finalAppFolder"
+	Write-Host "App name with version: $appNameWithVersion"
 }
 
 #### EXPORT FUNCTIONS FIELD ####
