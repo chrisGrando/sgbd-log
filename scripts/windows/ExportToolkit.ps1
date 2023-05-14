@@ -12,7 +12,7 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Windows PowerShell Edition
-# Version: PROTOTYPE ~ 2023/05/10
+# Version: PROTOTYPE ~ 2023/05/14
 # Author: @chrisGrando
 # ****************************************************************************************************
 
@@ -132,7 +132,7 @@ while ($true) {
 	Write-Host "          | |                                              "
 	Write-Host "          |_|                                              "
 	Write-Host "***********************************************************"
-	Write-Host "    Windows PowerShell Edition ~ PROTOTYPE - 2023/05/10"
+	Write-Host "    Windows PowerShell Edition ~ PROTOTYPE - 2023/05/14"
 	Write-Host "                   Author:  @chrisGrando"
 	Write-Host "               Using PowerShell version: $WPS_VERSION"
 	Write-Host "***********************************************************"

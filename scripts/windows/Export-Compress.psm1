@@ -16,7 +16,7 @@
 
 $modulePath = $PSScriptRoot -replace '\\', '/'
 $moduleName = "Export-Compress"
-$moduleVersion = "2023.05.10"
+$moduleVersion = "2023.05.14"
 $moduleAuthor = "chrisGrando"
 $moduleCompany = "Araucaria Projects"
 $moduleDescription = "Module to export project binaries and compress then as 7z, zip or tar.xz."
@@ -53,7 +53,6 @@ New-Variable -Name JAR_ONLY -Value $false
 New-Variable -Name COMPRESS_7Z -Value 0 -Option Constant
 New-Variable -Name COMPRESS_ZIP -Value 1 -Option Constant
 New-Variable -Name COMPRESS_ZIP_TAR_XZ -Value 2 -Option Constant
-New-Variable -Name COMPRESS_NONE -Value 3 -Option Constant
 New-Variable -Name COMPRESS_OPTION -Value $null
 
 #### FUNCTIONS FIELD ####
@@ -450,15 +449,149 @@ function Start-Exporting {
 		[parameter(mandatory)] [string] $exportFolderName
 	)
 	
-	# The path where the exported files goes to
-	$exportPath = "$($rootFolder)$($exportFolderName)"
-	$appNameWithVersion = "$($APP_FOLDER)_v$($APP_VERSION)"
-	$finalFolderName = ""
+	# Abort if no platforms were selected
+	if (!$WINDOWS_x86 -And !$WINDOWS_x64 -And !$LINUX_i386 -And !$LINUX_amd64 -And !$JAR_ONLY) {
+		clear
+		Write-Host "[WARNING] No platforms were selected. Aborting..."
+		Write-Host "-----------------------------------------------------------"
+		return
+	}
 	
-	# TODO: Remove debug info and implement actual function code
+	# Abort if "target" folder doesn't exist or is empty
+	if (-Not (Test-Path "$($rootFolder)target/*.*")) {
+		clear
+		Write-Error "[FATAL] Target folder doesn't exist or is empty. Aborting..."
+		cmd /c pause
+		exit 1
+	}
+	
+	# The path where the exported files goes to
+	$exportPath = "$($rootFolder)$($exportFolderName)/"
+	$appNameWithVersion = "$($APP_FOLDER)_v$($APP_VERSION)"
+	
+	# The path to 7z and it's files
+	$7z_path = "$($rootFolder)7z/windows/7zr.exe"
+	$jre_path = "$($rootFolder)7z/files/"
+	
+	# Start exporting process
 	clear
-	Write-Host "Export path: $exportPath"
-	Write-Host "App name with version: $appNameWithVersion"
+	Write-Host "STARTING THE EXPORTATION PROCESS..."
+	Write-Host "-----------------------------------------------------------"
+	
+	# Delete exporting folder if it already exists
+	if (Test-Path -Path $exportPath) {
+		Remove-Item -LiteralPath $exportPath -Force -Recurse
+	}
+	
+	# Create exporting folder
+	Write-Host "`nCreating export folder..."
+	New-Item -Path $exportPath -ItemType Directory
+	
+	# 32-bit Windows
+	if ($WINDOWS_x86) {
+		$finalAppFolderName = "$($appNameWithVersion)_Windows_x86"
+		$currentBuildPath = "$($exportPath)$($finalAppFolderName)/"
+		
+		# Create build folder
+		Write-Host "`nCreating current build folder..."
+		New-Item -Path $currentBuildPath -ItemType Directory
+		
+		# Copy files to the build folder
+		Write-Host "`nCopying files to the $finalAppFolderName folder...`n"
+		
+		if (Test-Path "$($rootFolder)target/*.jar") {
+			Copy-Item -Path "$($rootFolder)target/*" -Destination $currentBuildPath -Filter "*.jar"
+			Write-Host "* Jar file [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)target/*-x32.exe") {
+			Copy-Item -Path "$($rootFolder)target/*" -Destination $currentBuildPath -Filter "*-x32.exe"
+			Write-Host "* Executable file [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)database/*.*") {
+			New-Item -Path "$($currentBuildPath)database/" -ItemType Directory | Out-Null
+			Copy-Item -Path "$($rootFolder)database/*" -Destination "$($currentBuildPath)database/" -Exclude "*.pdf"
+			Write-Host "* Database folder [OK]"
+		}
+		
+		# Extract JRE
+		Write-Host "`nExtracting JRE contents..."
+		cd $currentBuildPath
+		Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "x", "-y", "$($jre_path)JRE17_Windows_x86.7z"
+		
+		# Package everything in the build folder
+		Write-Host "`nPackaging the $finalAppFolderName folder contents..."
+		cd $exportPath
+		
+		switch ($COMPRESS_OPTION) {
+			$COMPRESS_7Z {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).7z", "$finalAppFolderName"
+			}
+			$COMPRESS_ZIP {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
+			}
+			$COMPRESS_ZIP_TAR_XZ {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "-tzip", "$($finalAppFolderName)", "$finalAppFolderName"
+			}
+			default {
+				Write-Host "Compression is disabled. Skipping..."
+			}
+		}
+	}
+	
+	# 64-bit Windows
+	if ($WINDOWS_x64) {
+		$finalAppFolderName = "$($appNameWithVersion)_Windows_x64"
+		$currentBuildPath = "$($exportPath)$($finalAppFolderName)/"
+		
+		# Create build folder
+		Write-Host "`nCreating current build folder..."
+		New-Item -Path $currentBuildPath -ItemType Directory
+		
+		# Copy files to the build folder
+		Write-Host "`nCopying files to the $finalAppFolderName folder...`n"
+		
+		if (Test-Path "$($rootFolder)target/*.jar") {
+			Copy-Item -Path "$($rootFolder)target/*" -Destination $currentBuildPath -Filter "*.jar"
+			Write-Host "* Jar file [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)target/*-x64.exe") {
+			Copy-Item -Path "$($rootFolder)target/*" -Destination $currentBuildPath -Filter "*-x64.exe"
+			Write-Host "* Executable file [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)database/*.*") {
+			New-Item -Path "$($currentBuildPath)database/" -ItemType Directory | Out-Null
+			Copy-Item -Path "$($rootFolder)database/*" -Destination "$($currentBuildPath)database/" -Exclude "*.pdf"
+			Write-Host "* Database folder [OK]"
+		}
+		
+		# Extract JRE
+		Write-Host "`nExtracting JRE contents..."
+		cd $currentBuildPath
+		Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "x", "-y", "$($jre_path)JRE17_Windows_x64.7z"
+		
+		# Package everything in the build folder
+		Write-Host "`nPackaging the $finalAppFolderName folder contents..."
+		cd $exportPath
+		
+		switch ($COMPRESS_OPTION) {
+			$COMPRESS_7Z {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).7z", "$finalAppFolderName"
+			}
+			$COMPRESS_ZIP {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
+			}
+			$COMPRESS_ZIP_TAR_XZ {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "-tzip", "$($finalAppFolderName)", "$finalAppFolderName"
+			}
+			default {
+				Write-Host "Compression is disabled. Skipping..."
+			}
+		}
+	}
 }
 
 #### EXPORT FUNCTIONS FIELD ####
