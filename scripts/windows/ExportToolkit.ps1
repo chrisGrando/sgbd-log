@@ -12,7 +12,7 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Windows PowerShell Edition
-# Version: PROTOTYPE ~ 2023/05/14
+# Version: PROTOTYPE ~ 2023/05/15
 # Author: @chrisGrando
 # ****************************************************************************************************
 
@@ -41,6 +41,7 @@ if ($WPS_VERSION -lt 5.1) {
 #### IMPORT FIELD ####
 
 Import-Module -Name "$($projectAbsolutePath)scripts/windows/Export-Compress.psm1"
+Import-Module -Name "$($projectAbsolutePath)scripts/windows/Build-Maven.psm1"
 
 #### GLOBAL VARIABLES FIELD ####
 
@@ -71,7 +72,9 @@ function Invoke-WaitAndExit {
 
 # Execute Apache Maven to perform an "clean install"
 function Invoke-BuildMavenProject {
-	
+	Set-IsJavacAvaliable
+	Set-IsMavenAvaliable
+	Start-CleanInstall $projectAbsolutePath $KEY_Y $KEY_N
 }
 
 # Erase Windows icon (.ico) file cache
@@ -132,7 +135,7 @@ while ($true) {
 	Write-Host "          | |                                              "
 	Write-Host "          |_|                                              "
 	Write-Host "***********************************************************"
-	Write-Host "    Windows PowerShell Edition ~ PROTOTYPE - 2023/05/14"
+	Write-Host "    Windows PowerShell Edition ~ PROTOTYPE - 2023/05/15"
 	Write-Host "                   Author:  @chrisGrando"
 	Write-Host "               Using PowerShell version: $WPS_VERSION"
 	Write-Host "***********************************************************"
