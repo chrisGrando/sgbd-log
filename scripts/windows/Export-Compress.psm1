@@ -16,7 +16,7 @@
 
 $modulePath = $PSScriptRoot -replace '\\', '/'
 $moduleName = "Export-Compress"
-$moduleVersion = "2023.05.14"
+$moduleVersion = "2023.05.15"
 $moduleAuthor = "chrisGrando"
 $moduleCompany = "Araucaria Projects"
 $moduleDescription = "Module to export project binaries and compress then as 7z, zip or tar.xz."
@@ -493,7 +493,7 @@ function Start-Exporting {
 		$currentBuildPath = "$($exportPath)$($finalAppFolderName)/"
 		
 		# Create build folder
-		Write-Host "`nCreating current build folder..."
+		Write-Host "`nCreating $finalAppFolderName build folder..."
 		New-Item -Path $currentBuildPath -ItemType Directory
 		
 		# Copy files to the build folder
@@ -513,6 +513,11 @@ function Start-Exporting {
 			New-Item -Path "$($currentBuildPath)database/" -ItemType Directory | Out-Null
 			Copy-Item -Path "$($rootFolder)database/*" -Destination "$($currentBuildPath)database/" -Exclude "*.pdf"
 			Write-Host "* Database folder [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)README.md") {
+			Copy-Item -Path "$($rootFolder)*" -Destination $currentBuildPath -Filter "README.md"
+			Write-Host "* README file [OK]"
 		}
 		
 		# Extract JRE
@@ -538,6 +543,8 @@ function Start-Exporting {
 				Write-Host "Compression is disabled. Skipping..."
 			}
 		}
+		
+		Write-Host "-----------------------------------------------------------"
 	}
 	
 	# 64-bit Windows
@@ -546,7 +553,7 @@ function Start-Exporting {
 		$currentBuildPath = "$($exportPath)$($finalAppFolderName)/"
 		
 		# Create build folder
-		Write-Host "`nCreating current build folder..."
+		Write-Host "`nCreating $finalAppFolderName build folder..."
 		New-Item -Path $currentBuildPath -ItemType Directory
 		
 		# Copy files to the build folder
@@ -566,6 +573,11 @@ function Start-Exporting {
 			New-Item -Path "$($currentBuildPath)database/" -ItemType Directory | Out-Null
 			Copy-Item -Path "$($rootFolder)database/*" -Destination "$($currentBuildPath)database/" -Exclude "*.pdf"
 			Write-Host "* Database folder [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)README.md") {
+			Copy-Item -Path "$($rootFolder)*" -Destination $currentBuildPath -Filter "README.md"
+			Write-Host "* README file [OK]"
 		}
 		
 		# Extract JRE
@@ -591,6 +603,178 @@ function Start-Exporting {
 				Write-Host "Compression is disabled. Skipping..."
 			}
 		}
+		
+		Write-Host "-----------------------------------------------------------"
+	}
+	
+	# 32-bit Linux
+	if ($LINUX_i386) {
+		$finalAppFolderName = "$($appNameWithVersion)_Linux_i386"
+		$currentBuildPath = "$($exportPath)$($finalAppFolderName)/"
+		
+		# Create build folder
+		Write-Host "`nCreating $finalAppFolderName build folder..."
+		New-Item -Path $currentBuildPath -ItemType Directory
+		
+		# Copy files to the build folder
+		Write-Host "`nCopying files to the $finalAppFolderName folder...`n"
+		
+		if (Test-Path "$($rootFolder)target/*.jar") {
+			Copy-Item -Path "$($rootFolder)target/*" -Destination $currentBuildPath -Filter "*.jar"
+			Write-Host "* Jar file [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)scripts/linux/GenJAL.sh") {
+			Copy-Item -Path "$($rootFolder)scripts/linux/*" -Destination $currentBuildPath -Filter "GenJAL.sh"
+			Write-Host "* Executable file [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)database/*.*") {
+			New-Item -Path "$($currentBuildPath)database/" -ItemType Directory | Out-Null
+			Copy-Item -Path "$($rootFolder)database/*" -Destination "$($currentBuildPath)database/" -Exclude "*.pdf"
+			Write-Host "* Database folder [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)README.md") {
+			Copy-Item -Path "$($rootFolder)*" -Destination $currentBuildPath -Filter "README.md"
+			Write-Host "* README file [OK]"
+		}
+		
+		# Extract JRE
+		Write-Host "`nExtracting JRE contents..."
+		cd $currentBuildPath
+		Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "x", "-y", "$($jre_path)JRE17_Linux_i386.7z"
+		
+		# Package everything in the build folder
+		Write-Host "`nPackaging the $finalAppFolderName folder contents..."
+		cd $exportPath
+		
+		switch ($COMPRESS_OPTION) {
+			$COMPRESS_7Z {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).7z", "$finalAppFolderName"
+			}
+			$COMPRESS_ZIP {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
+			}
+			$COMPRESS_ZIP_TAR_XZ {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "-ttar", "$($finalAppFolderName).tar.xz", "$finalAppFolderName"
+			}
+			default {
+				Write-Host "Compression is disabled. Skipping..."
+			}
+		}
+		
+		Write-Host "-----------------------------------------------------------"
+	}
+	
+	# 64-bit Linux
+	if ($LINUX_amd64) {
+		$finalAppFolderName = "$($appNameWithVersion)_Linux_amd64"
+		$currentBuildPath = "$($exportPath)$($finalAppFolderName)/"
+		
+		# Create build folder
+		Write-Host "`nCreating $finalAppFolderName build folder..."
+		New-Item -Path $currentBuildPath -ItemType Directory
+		
+		# Copy files to the build folder
+		Write-Host "`nCopying files to the $finalAppFolderName folder...`n"
+		
+		if (Test-Path "$($rootFolder)target/*.jar") {
+			Copy-Item -Path "$($rootFolder)target/*" -Destination $currentBuildPath -Filter "*.jar"
+			Write-Host "* Jar file [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)scripts/linux/GenJAL.sh") {
+			Copy-Item -Path "$($rootFolder)scripts/linux/*" -Destination $currentBuildPath -Filter "GenJAL.sh"
+			Write-Host "* Executable file [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)database/*.*") {
+			New-Item -Path "$($currentBuildPath)database/" -ItemType Directory | Out-Null
+			Copy-Item -Path "$($rootFolder)database/*" -Destination "$($currentBuildPath)database/" -Exclude "*.pdf"
+			Write-Host "* Database folder [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)README.md") {
+			Copy-Item -Path "$($rootFolder)*" -Destination $currentBuildPath -Filter "README.md"
+			Write-Host "* README file [OK]"
+		}
+		
+		# Extract JRE
+		Write-Host "`nExtracting JRE contents..."
+		cd $currentBuildPath
+		Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "x", "-y", "$($jre_path)JRE17_Linux_amd64.7z"
+		
+		# Package everything in the build folder
+		Write-Host "`nPackaging the $finalAppFolderName folder contents..."
+		cd $exportPath
+		
+		switch ($COMPRESS_OPTION) {
+			$COMPRESS_7Z {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).7z", "$finalAppFolderName"
+			}
+			$COMPRESS_ZIP {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
+			}
+			$COMPRESS_ZIP_TAR_XZ {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "-ttar", "$($finalAppFolderName).tar.xz", "$finalAppFolderName"
+			}
+			default {
+				Write-Host "Compression is disabled. Skipping..."
+			}
+		}
+		
+		Write-Host "-----------------------------------------------------------"
+	}
+	
+	# Universal JAR file
+	if ($JAR_ONLY) {
+		$finalAppFolderName = "$($appNameWithVersion)_Jar"
+		$currentBuildPath = "$($exportPath)$($finalAppFolderName)/"
+		
+		# Create build folder
+		Write-Host "`nCreating $finalAppFolderName build folder..."
+		New-Item -Path $currentBuildPath -ItemType Directory
+		
+		# Copy files to the build folder
+		Write-Host "`nCopying files to the $finalAppFolderName folder...`n"
+		
+		if (Test-Path "$($rootFolder)target/*.jar") {
+			Copy-Item -Path "$($rootFolder)target/*" -Destination $currentBuildPath -Filter "*.jar"
+			Write-Host "* Jar file [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)database/*.*") {
+			New-Item -Path "$($currentBuildPath)database/" -ItemType Directory | Out-Null
+			Copy-Item -Path "$($rootFolder)database/*" -Destination "$($currentBuildPath)database/" -Exclude "*.pdf"
+			Write-Host "* Database folder [OK]"
+		}
+		
+		if (Test-Path "$($rootFolder)README.md") {
+			Copy-Item -Path "$($rootFolder)*" -Destination $currentBuildPath -Filter "README.md"
+			Write-Host "* README file [OK]"
+		}
+		
+		# Package everything in the build folder
+		Write-Host "`nPackaging the $finalAppFolderName folder contents..."
+		cd $exportPath
+		
+		switch ($COMPRESS_OPTION) {
+			$COMPRESS_7Z {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).7z", "$finalAppFolderName"
+			}
+			$COMPRESS_ZIP {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
+			}
+			$COMPRESS_ZIP_TAR_XZ {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "-tzip", "$($finalAppFolderName)", "$finalAppFolderName"
+			}
+			default {
+				Write-Host "Compression is disabled. Skipping..."
+			}
+		}
+		
+		Write-Host "-----------------------------------------------------------"
 	}
 }
 
