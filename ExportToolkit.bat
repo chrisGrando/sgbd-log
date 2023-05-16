@@ -26,8 +26,8 @@ set script_path=%~dp0
 :: Checks if a newer version of Windows PowerShell exists
 pwsh -version >nul 2>&1 && (
 	:: PowerShell Core was found, using it to run the script
-	start "ExportToolkit PowerShell Edition" pwsh.exe -ExecutionPolicy Bypass -File "%script_path%\scripts\windows\ExportToolkit.ps1" %script_path%
+	start "ExportToolkit PowerShell Edition" /max pwsh.exe -ExecutionPolicy Bypass -File "%script_path%\scripts\windows\ExportToolkit.ps1" %script_path%
 ) || (
 	:: Newer version of PowerShell was NOT found, fallback to default
-	start "ExportToolkit PowerShell Edition" PowerShell.exe -ExecutionPolicy Bypass -File "%script_path%\scripts\windows\ExportToolkit.ps1" %script_path%
+	start "ExportToolkit PowerShell Edition" /max PowerShell.exe -ExecutionPolicy Bypass -File "%script_path%\scripts\windows\ExportToolkit.ps1" %script_path%
 )

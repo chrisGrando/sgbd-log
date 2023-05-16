@@ -66,12 +66,13 @@
                                 <resource>
                                     <targetPath>${basedir}/target/classes/app/gui/resources/icon</targetPath>
                                     <directory>${basedir}/src/main/java/app/gui/resources/icon</directory>
-                                    <filtering>false</filtering>
+                                    <excludes>
+                                        <exclude>*.ico</exclude>
+                                    </excludes>
                                 </resource>
                                 <resource>
                                     <targetPath>${basedir}/target/classes/app/gui/resources/ttf</targetPath>
                                     <directory>${basedir}/src/main/java/app/gui/resources/ttf</directory>
-                                    <filtering>false</filtering>
                                 </resource>
                             </resources>
                         </configuration>
@@ -124,7 +125,7 @@
                             <chdir>.</chdir>
                             <dontWrapJar>true</dontWrapJar>
                             <stayAlive>true</stayAlive>
-                            <icon>${basedir}/target/classes/app/gui/resources/icon/PROJECT.ico</icon>
+                            <icon>${basedir}/src/main/java/app/gui/resources/icon/PROJECT.ico</icon>
                             <disableVersionInfoDefaults>false</disableVersionInfoDefaults>
                             <jre>
                                 <path>jre</path>
@@ -151,7 +152,7 @@
                             <chdir>.</chdir>
                             <dontWrapJar>true</dontWrapJar>
                             <stayAlive>true</stayAlive>
-                            <icon>${basedir}/target/classes/app/gui/resources/icon/PROJECT.ico</icon>
+                            <icon>${basedir}/src/main/java/app/gui/resources/icon/PROJECT.ico</icon>
                             <disableVersionInfoDefaults>false</disableVersionInfoDefaults>
                             <jre>
                                 <path>jre</path>

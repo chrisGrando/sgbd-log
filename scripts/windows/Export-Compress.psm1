@@ -19,7 +19,7 @@ $moduleName = "Export-Compress"
 $moduleVersion = "2023.05.15"
 $moduleAuthor = "chrisGrando"
 $moduleCompany = "Araucaria Projects"
-$moduleDescription = "Module to export project binaries and compress then as 7z, zip or tar.xz."
+$moduleDescription = "Module to export project binaries and compress then as 7z, zip or tar."
 
 New-ModuleManifest -Path "$modulePath/$moduleName.psd1" `
 	-RootModule $moduleName `
@@ -52,7 +52,7 @@ New-Variable -Name JAR_ONLY -Value $false
 # Compression option
 New-Variable -Name COMPRESS_7Z -Value 0 -Option Constant
 New-Variable -Name COMPRESS_ZIP -Value 1 -Option Constant
-New-Variable -Name COMPRESS_ZIP_TAR_XZ -Value 2 -Option Constant
+New-Variable -Name COMPRESS_ZIP_TAR -Value 2 -Option Constant
 New-Variable -Name COMPRESS_OPTION -Value $null
 
 #### FUNCTIONS FIELD ####
@@ -390,7 +390,7 @@ function Invoke-MenuCompression {
 			$cursorRight = "  "
 		}
 		
-		$option_3 = "$($cursorLeft)[3]$($cursorRight) Jar and Windows builds as zip, everything else as tar.xz"
+		$option_3 = "$($cursorLeft)[3]$($cursorRight) Jar and Windows builds as zip, everything else as tar"
 		
 		# 4) Don't compress anything
 		if ($currentOption -eq 3) {
@@ -536,8 +536,8 @@ function Start-Exporting {
 			$COMPRESS_ZIP {
 				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
 			}
-			$COMPRESS_ZIP_TAR_XZ {
-				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "-tzip", "$($finalAppFolderName)", "$finalAppFolderName"
+			$COMPRESS_ZIP_TAR {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
 			}
 			default {
 				Write-Host "Compression is disabled. Skipping..."
@@ -596,8 +596,8 @@ function Start-Exporting {
 			$COMPRESS_ZIP {
 				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
 			}
-			$COMPRESS_ZIP_TAR_XZ {
-				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "-tzip", "$($finalAppFolderName)", "$finalAppFolderName"
+			$COMPRESS_ZIP_TAR {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
 			}
 			default {
 				Write-Host "Compression is disabled. Skipping..."
@@ -625,7 +625,7 @@ function Start-Exporting {
 		}
 		
 		if (Test-Path "$($rootFolder)scripts/linux/GenJAL.sh") {
-			Copy-Item -Path "$($rootFolder)scripts/linux/*" -Destination $currentBuildPath -Filter "GenJAL.sh"
+			Copy-Item -Path "$($rootFolder)scripts/linux/GenJAL.sh" -Destination "$($currentBuildPath)start.sh"
 			Write-Host "* Executable file [OK]"
 		}
 		
@@ -656,8 +656,8 @@ function Start-Exporting {
 			$COMPRESS_ZIP {
 				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
 			}
-			$COMPRESS_ZIP_TAR_XZ {
-				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "-ttar", "$($finalAppFolderName).tar.xz", "$finalAppFolderName"
+			$COMPRESS_ZIP_TAR {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).tar", "$finalAppFolderName"
 			}
 			default {
 				Write-Host "Compression is disabled. Skipping..."
@@ -685,7 +685,7 @@ function Start-Exporting {
 		}
 		
 		if (Test-Path "$($rootFolder)scripts/linux/GenJAL.sh") {
-			Copy-Item -Path "$($rootFolder)scripts/linux/*" -Destination $currentBuildPath -Filter "GenJAL.sh"
+			Copy-Item -Path "$($rootFolder)scripts/linux/GenJAL.sh" -Destination "$($currentBuildPath)start.sh"
 			Write-Host "* Executable file [OK]"
 		}
 		
@@ -716,8 +716,8 @@ function Start-Exporting {
 			$COMPRESS_ZIP {
 				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
 			}
-			$COMPRESS_ZIP_TAR_XZ {
-				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "-ttar", "$($finalAppFolderName).tar.xz", "$finalAppFolderName"
+			$COMPRESS_ZIP_TAR {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).tar", "$finalAppFolderName"
 			}
 			default {
 				Write-Host "Compression is disabled. Skipping..."
@@ -766,8 +766,8 @@ function Start-Exporting {
 			$COMPRESS_ZIP {
 				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
 			}
-			$COMPRESS_ZIP_TAR_XZ {
-				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "-tzip", "$($finalAppFolderName)", "$finalAppFolderName"
+			$COMPRESS_ZIP_TAR {
+				Start-Process -NoNewWindow -Wait -FilePath $7z_path -ArgumentList "a", "-y", "-sdel", "-mx9", "$($finalAppFolderName).zip", "$finalAppFolderName"
 			}
 			default {
 				Write-Host "Compression is disabled. Skipping..."

@@ -104,6 +104,7 @@ function Start-CleanInstall {
 		clear
 		cd $rootFolder
 		Start-Process -NoNewWindow -Wait -FilePath "mvn" -ArgumentList "-v"
+		Write-Host "---------------------------------------------------------------------------------------------"
 		Start-Process -NoNewWindow -Wait -FilePath "mvn" -ArgumentList "clean", "install"
 	}
 }
