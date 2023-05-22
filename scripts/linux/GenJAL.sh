@@ -11,14 +11,14 @@
 # ------------------------------------------------------------
 # 
 # Generic Java Application Launcher
-# Version: PROTOTYPE ~ 2023/04/11
+# Version: PROTOTYPE ~ 2023/05/22
 # Author: @chrisGrando
 
 ### VARIABLES ###
 
 SHELL_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 CUSTOM_JRE="$SHELL_PATH/jre/bin/java"
-JRE=""
+JRE="/dev/null"
 JVM_ARGS=""
 APP_ARGS=""
 JAR="*.jar"
@@ -45,8 +45,7 @@ if test -f $CUSTOM_JRE ; then
     # Set custom paths
     export PATH="$PATH:$SHELL_PATH/jre/bin"
     export JAVA_HOME="$SHELL_PATH/jre"
-    export java=$CUSTOM_JRE
-    JRE=$java
+    JRE=$CUSTOM_JRE
 
     # Print custom JRE version
     echo "*******************************************************************"
@@ -57,7 +56,7 @@ if test -f $CUSTOM_JRE ; then
     echo "*******************************************************************\n"
 
 # If no bundled JRE was found, check if java is globally available in the system
-elif command -v java &> /dev/null ; then
+elif command -v java > /dev/null ; then
     # Use global path
     JRE="/bin/java"
 
@@ -88,4 +87,3 @@ else
     echo "[FATAL] JAR file not found..."
     exit 1
 fi
-
