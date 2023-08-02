@@ -11,7 +11,7 @@
 # ------------------------------------------------------------
 # 
 # Generic Java Application Launcher
-# Version: PROTOTYPE ~ 2023/05/22
+# Version: PROTOTYPE ~ 2023/08/02
 # Author: @chrisGrando
 
 ### VARIABLES ###
@@ -46,6 +46,9 @@ if test -f $CUSTOM_JRE ; then
     export PATH="$PATH:$SHELL_PATH/jre/bin"
     export JAVA_HOME="$SHELL_PATH/jre"
     JRE=$CUSTOM_JRE
+
+    # Set bundled Java as executable
+    chmod +x $JRE
 
     # Print custom JRE version
     echo "*******************************************************************"
