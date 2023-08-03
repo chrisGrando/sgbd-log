@@ -24,4 +24,5 @@ buildNumber.properties
 ### Project ###
 output/
 export/
+__pycache__/
 *.psd1
