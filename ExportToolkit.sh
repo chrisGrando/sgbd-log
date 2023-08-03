@@ -27,7 +27,7 @@ SCRIPT_PATH="$SHELL_PATH/scripts/linux"
 # Dependencies
 isPythonInstalled="$(command -v python3)"
 isPipInstalled="$(command -v pip3)"
-isPynputInstalled="$(pip list | grep -F pynput)"
+isPynputInstalled="$(pip3 show pynput)"
 
 # Checks if Python 3.x is NOT installed
 if [ "$isPythonInstalled" = "" ] ; then
