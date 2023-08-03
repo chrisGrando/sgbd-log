@@ -54,12 +54,12 @@ if test -f $CUSTOM_JRE ; then
     echo "*******************************************************************"
     echo "[INFO] Using bundled JRE!"
     echo "*******************************************************************"
-    exec $JRE -version &
+    $JRE -version &
     wait $!
     echo "*******************************************************************\n"
 
 # If no bundled JRE was found, check if java is globally available in the system
-elif command -v java > /dev/null ; then
+elif command -v java >/dev/null ; then
     # Use global path
     JRE="/bin/java"
 
@@ -67,7 +67,7 @@ elif command -v java > /dev/null ; then
     echo "*******************************************************************"
     echo "[INFO] Using global JRE!"
     echo "*******************************************************************"
-    exec java -version &
+    java -version &
     wait $!
     echo "*******************************************************************\n"
 

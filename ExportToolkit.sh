@@ -43,7 +43,7 @@ fi
 
 # Checks if Python dependency "pynput" is NOT installed (and installs it)
 if [ "$isPynputInstalled" = "" ] ; then
-    exec pip3 install pynput &
+    pip3 install pynput &
     wait $!
 fi
 
