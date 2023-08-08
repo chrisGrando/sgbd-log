@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # ****************************************************************************************************
 #  /$$$$$$$$                                      /$$ /$$$$$$$$               /$$/$$      /$$  /$$    
 # | $$_____/                                     | $$|__  $$__/              | $| $$     |__/ | $$    
@@ -13,40 +11,31 @@
 #                   | $$                                                                              
 #                   |__/                                                                              
 # ****************************************************************************************************
-# ExportToolkit ~ Linux Bash Shell Launcher
+# ExportToolkit ~ Linux Python Edition
 # Version: PROTOTYPE ~ 2023/08/08
 # Author: @chrisGrando
 # ****************************************************************************************************
 
-# Absolute path to this shell script
-SHELL_PATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+import os
+import subprocess
 
-# Path to the Linux scripts
-SCRIPT_PATH="$SHELL_PATH/scripts/linux"
+class Maven:
 
-# Dependencies
-isPythonInstalled="$(command -v python3)"
-isPipInstalled="$(command -v pip3)"
-isPynputInstalled="$(pip3 show pynput)"
-
-# Checks if Python 3.x is NOT installed
-if [ "$isPythonInstalled" = "" ] ; then
-    echo "[FATAL] Python 3 not found..."
-    exit 1
-fi
-
-# Checks if Pip 3 is NOT installed
-if [ "$isPipInstalled" = "" ] ; then
-    echo "[FATAL] Pip 3 not found..."
-    exit 1
-fi
-
-# Checks if Python dependency "pynput" is NOT installed (and installs it)
-if [ "$isPynputInstalled" = "" ] ; then
-    pip3 install pynput &
-    wait $!
-fi
-
-# Run Python script
-exec python3 "$SCRIPT_PATH/ExportToolkit.py" $SHELL_PATH &
-wait $!
+    # Checks if JDK is avaliable
+    def isJavaInstalled(self):
+        result = subprocess.call(["command", "-v", "javac"])
+        return bool(result)
+    
+    # Checks if Apache Mavem (mvn) is avaliable
+    def isMavenInstalled(self):
+        result = subprocess.call(["command", "-v", "mvn"])
+        return bool(result)
+    
+    # Build the project via "mvn clean install" 
+    def buildProject(self, path):
+        os.system('clear')
+        os.chdir(path)
+        print("-----------------------------------------------------------")
+        subprocess.run(["mvn", "-v"], stderr=subprocess.STDOUT)
+        print("-----------------------------------------------------------")
+        subprocess.run(["mvn", "clean", "install"], stderr=subprocess.STDOUT)

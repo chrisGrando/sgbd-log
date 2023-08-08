@@ -12,7 +12,7 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Linux Python Edition
-# Version: PROTOTYPE ~ 2023/08/02
+# Version: PROTOTYPE ~ 2023/08/08
 # Author: @chrisGrando
 # ****************************************************************************************************
 
@@ -21,6 +21,7 @@ from pynput import keyboard
 
 class Menu:
 
+    # Script's main menu screen
     def mainMenu(self):
         item = 0
         loop = True
@@ -98,14 +99,13 @@ class Menu:
             # Keyboard controls
             with keyboard.Events() as events:
                 for event in events:
-                    if isinstance(event, keyboard.Events.Press):
+                    if isinstance(event, keyboard.Events.Release):
                         # Move cursor UP
                         if(event.key == keyboard.Key.up or event.key == keyboard.Key.left):
                             if(item == 0):
                                 item = 3
                             ##############
                             item -= 1
-                            break
 
                         # Move cursor DOWN
                         if(event.key == keyboard.Key.down or event.key == keyboard.Key.right):
@@ -113,12 +113,13 @@ class Menu:
                                 item = -1
                             ##############
                             item += 1
-                            break
 
                         # Confirm / loop stop condition
                         if(event.key == keyboard.Key.space):
                             loop = False
-                            break
+
+                        # End of event
+                        break
         
         # Kill keyboard listener
         keyboard_listener.stop()
@@ -126,6 +127,7 @@ class Menu:
         # Return selected option
         return item
 
+    # The target OS + Architecture to export the build
     def platformMenu(self):
         item = 0
         loop = True
@@ -135,6 +137,7 @@ class Menu:
 
         print()
 
+    # The compression method for the binaries
     def compressMenu(self):
         item = 0
         loop = True
@@ -142,3 +145,57 @@ class Menu:
         rightCursor = ""
 
         print()
+
+    # Confirmation message
+    def yesOrNo(self):
+        loop = True
+        proceed = None
+
+        print("Do you wish to proceed? (Y / N)")
+
+        while loop:
+            # Call keyboard listener
+            keyboard_listener = keyboard.Listener(suppress=True)
+            keyboard_listener.start()
+
+            # User's choice
+            with keyboard.Events() as events:
+                for event in events:
+                    if isinstance(event, keyboard.Events.Release):
+                        # Yes
+                        if(event.key == keyboard.KeyCode.from_char("y")):
+                            proceed = True
+                            loop = False
+
+                        # No
+                        if(event.key == keyboard.KeyCode.from_char("n")):
+                            proceed = False
+                            loop = False
+
+                        # End of event
+                        break
+
+            # Kill keyboard listener
+            keyboard_listener.stop()
+
+        # Return choice
+        return proceed
+
+    # Wait for the user to press any key and exit
+    def pressAnyKey(self, code=0):
+        print("\n*** END OF SCRIPT ***")
+        print("Press any key to exit...")
+
+        # Call keyboard listener
+        keyboard_listener = keyboard.Listener(suppress=True)
+        keyboard_listener.start()
+
+        # Wait for any key press
+        with keyboard.Events() as events:
+            for event in events:
+                if isinstance(event, keyboard.Events.Release):
+                    break
+
+        # Exit script
+        keyboard_listener.stop()
+        exit(code)

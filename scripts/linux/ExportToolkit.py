@@ -12,12 +12,13 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Linux Python Edition
-# Version: PROTOTYPE ~ 2023/08/02
+# Version: PROTOTYPE ~ 2023/08/08
 # Author: @chrisGrando
 # ****************************************************************************************************
 
 import platform
 import sys
+from Maven import Maven
 from Menu import Menu
 
 class ExportToolkit:
@@ -33,10 +34,43 @@ class ExportToolkit:
         rootProjectPath = sys.argv[1]
         architecture = platform.architecture()[0]
         menu = Menu()
+        maven = Maven()
 
         # *** Main code field ***
         option = menu.mainMenu()
-        print("\nSelected: " + str(option))
+
+        # Export & Compress
+        if(option == 0):
+            print("\nSelected Export & Compress...")
+            menu.pressAnyKey()
+
+        # Build project
+        elif(option == 1):
+            # Java JDK not found
+            if(not maven.isJavaInstalled):
+                print("\n[FATAL] Java JDK not found...")
+                menu.pressAnyKey(1)
+
+            # Apache Maven not found
+            if(not maven.isMavenInstalled):
+                print("\n[FATAL] Apache Maven (mvn) not found...")
+                menu.pressAnyKey(1)
+
+            # Ask user's confirmation
+            print("\n################################################################")
+            print("[WARNING] Everything inside the \"target\" folder will be deleted!")
+            proceed = menu.yesOrNo()
+
+            # User allowed to continue
+            if(proceed):
+                maven.buildProject(rootProjectPath)
+
+            # Exit
+            menu.pressAnyKey()
+
+        # Quit
+        else:
+            menu.pressAnyKey()
         
 # ****************************************************************************************************
 # Calls main function
