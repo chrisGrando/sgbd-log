@@ -23,13 +23,13 @@ class Maven:
 
     # Checks if JDK is avaliable
     def isJavaInstalled(self):
-        result = subprocess.call(["command", "-v", "javac"])
-        return bool(result)
+        result = subprocess.call(["command", "-v", "javac"], shell=True)
+        return not bool(result)
     
     # Checks if Apache Mavem (mvn) is avaliable
     def isMavenInstalled(self):
-        result = subprocess.call(["command", "-v", "mvn"])
-        return bool(result)
+        result = subprocess.call(["command", "-v", "mvn"], shell=True)
+        return not bool(result)
     
     # Build the project via "mvn clean install" 
     def buildProject(self, path):

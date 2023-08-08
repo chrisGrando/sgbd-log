@@ -47,12 +47,12 @@ class ExportToolkit:
         # Build project
         elif(option == 1):
             # Java JDK not found
-            if(not maven.isJavaInstalled):
+            if(not maven.isJavaInstalled()):
                 print("\n[FATAL] Java JDK not found...")
                 menu.pressAnyKey(1)
 
             # Apache Maven not found
-            if(not maven.isMavenInstalled):
+            if(not maven.isMavenInstalled()):
                 print("\n[FATAL] Apache Maven (mvn) not found...")
                 menu.pressAnyKey(1)
 
