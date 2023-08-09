@@ -33,10 +33,6 @@ class Menu:
     def killKeyboardListener(self):
         self.keyboard_listener.stop()
 
-    # Set keyboard's input suppress state
-    def setSuppress(self, state):
-        self.keyboard_listener.suppress(state)
-
     # Script's main menu screen
     def mainMenu(self):
         item = 0
@@ -449,6 +445,95 @@ class Menu:
         # Return selected option
         return item
 
+    # Application name
+    def appName(self):
+        loop = True
+        name = ""
+
+        while loop:
+            # Clear the screen
+            os.system('clear')
+
+            print("Please enter the app folder name or leave it blank (default: sgbd-log).")
+            print("(Tip: Use something short and without spaces)")
+            print("Examples: sgbd-log, sgbd, app.")
+            print("***********************************************************")
+            print("> " + name + "|")
+
+            # Fake keyboard input
+            with keyboard.Events() as events:
+                for event in events:
+                    if isinstance(event, keyboard.Events.Release):
+                        # Character
+                        if(not isinstance(event.key, keyboard.Key)):
+                            name += event.key.char
+
+                        # Backspace
+                        if(event.key == keyboard.Key.backspace):
+                            name = self.fakeBackspace(name)
+
+                        # Spacebar
+                        if(event.key == keyboard.Key.space):
+                            name += " "
+
+                        # Confirm / loop stop condition
+                        if(event.key == keyboard.Key.enter):
+                            loop = False
+
+                        # End of event
+                        break
+
+        # Use default folder name if nothing was informed
+        if(len(name) == 0 or name.isspace()):
+            name = "sgbd-log"
+
+        # Return app name
+        return name
+
+    # Application version
+    def appVersion(self):
+        loop = True
+        version = ""
+
+        while loop:
+            # Clear the screen
+            os.system('clear')
+
+            print("Please enter the app version or leave it blank (default: 1.0).")
+            print("Examples: 1.0, 1.1.2a, 0.1-DEMO, 0.3.1-TRIAL")
+            print("***********************************************************")
+            print("> " + version + "|")
+
+            # Fake keyboard input
+            with keyboard.Events() as events:
+                for event in events:
+                    if isinstance(event, keyboard.Events.Release):
+                        # Character
+                        if(not isinstance(event.key, keyboard.Key)):
+                            version += event.key.char
+
+                        # Backspace
+                        if(event.key == keyboard.Key.backspace):
+                            version = self.fakeBackspace(version)
+
+                        # Spacebar
+                        if(event.key == keyboard.Key.space):
+                            version += " "
+
+                        # Confirm / loop stop condition
+                        if(event.key == keyboard.Key.enter):
+                            loop = False
+
+                        # End of event
+                        break
+
+        # Use default value if nothing was informed
+        if(len(version) == 0 or version.isspace()):
+            version = "1.0"
+
+        # Return app version
+        return version
+
     # Confirmation message
     def yesOrNo(self):
         loop = True
@@ -491,3 +576,13 @@ class Menu:
         # Exit script
         self.killKeyboardListener()
         exit(code)
+
+    # Remove last character of a string
+    def fakeBackspace(self, txt):
+        size = len(txt) - 1
+        newText = ""
+
+        for i in range(size):
+            newText += str(txt[i])
+
+        return newText

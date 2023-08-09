@@ -58,6 +58,16 @@ class ExportToolkit:
             # Compression method
             compression = menu.compressMenu()
 
+            # App name
+            name = menu.appName()
+
+            # App version
+            version = menu.appVersion()
+
+            # Run Export & Compress
+            print("\n" + name)
+            print(version)
+
             # Exit
             menu.pressAnyKey()
 
