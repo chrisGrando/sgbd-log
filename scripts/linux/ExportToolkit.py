@@ -31,17 +31,21 @@ class ExportToolkit:
             exit(1)
 
         # *** Variables field ***
+        
         rootProjectPath = sys.argv[1]
         architecture = platform.architecture()[0]
         menu = Menu()
         maven = Maven()
 
         # *** Main code field ***
+
+        # Main Menu
+        menu.callKeyboardListener()
         option = menu.mainMenu()
 
         # Export & Compress
         if(option == 0):
-            print("\nSelected Export & Compress...")
+            targetPlatforms = menu.platformMenu()
             menu.pressAnyKey()
 
         # Build project
