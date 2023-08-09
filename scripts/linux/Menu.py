@@ -12,7 +12,7 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Linux Python Edition
-# Version: PROTOTYPE ~ 2023/08/08
+# Version: PROTOTYPE ~ 2023/08/09
 # Author: @chrisGrando
 # ****************************************************************************************************
 
@@ -61,7 +61,7 @@ class Menu:
             print("          |_|                                              ")
             print("***********************************************************")
             print("           ExportToolkit ~ Linux Python Edition")
-            print("             Version: PROTOTYPE ~ 2023/08/02")
+            print("             Version: PROTOTYPE ~ 2023/08/09")
             print("                  Author: @chrisGrando")
             print("***********************************************************")
             print("Select an option below:")
@@ -359,7 +359,95 @@ class Menu:
         leftCursor = ""
         rightCursor = ""
 
-        print()
+        # Menu loop
+        while loop:
+            # Clear the screen
+            os.system('clear')
+
+            # Menu header
+            print("-----------------------------------------------------------")
+            print("Select an compression method to package the binaries:")
+            print("-----------------------------------------------------------")
+
+            # *** Menu options + cursor ***
+
+            # 1) Everything as 7z
+            if(item == 0):
+                leftCursor = "=>"
+                rightCursor = "<="
+            else:
+                leftCursor = "  "
+                rightCursor = "  "
+
+            option_0 = leftCursor + "[1]" + rightCursor + " Everything as 7z (recommended)"
+
+            # 2) Everything as zip
+            if(item == 1):
+                leftCursor = "=>"
+                rightCursor = "<="
+            else:
+                leftCursor = "  "
+                rightCursor = "  "
+
+            option_1 = leftCursor + "[2]" + rightCursor + " Everything as zip"
+            
+            # 3) Jar and Windows builds as zip, everything else as tar
+            if(item == 2):
+                leftCursor = "=>"
+                rightCursor = "<="
+            else:
+                leftCursor = "  "
+                rightCursor = "  "
+
+            option_2 = leftCursor + "[3]" + rightCursor + " Jar and Windows builds as zip, everything else as tar"
+
+            # 4) Don't compress anything
+            if(item == 3):
+                leftCursor = "=>"
+                rightCursor = "<="
+            else:
+                leftCursor = "  "
+                rightCursor = "  "
+
+            option_3 = leftCursor + "[4]" + rightCursor + " Don't compress anything"
+
+            # Render menu options
+            print(option_0)
+            print(option_1)
+            print(option_2)
+            print(option_3)
+            print("-----------------------------------------------------------")
+            print("CONTROLS:")
+            print(" * [Arrow Keys] ===> Move cursor")
+            print(" * [SPACEBAR] =====> Select option")
+
+            # Keyboard controls
+            with keyboard.Events() as events:
+                for event in events:
+                    if isinstance(event, keyboard.Events.Release):
+                        # Move cursor UP
+                        if(event.key == keyboard.Key.up or event.key == keyboard.Key.left):
+                            if(item == 0):
+                                item = 4
+                            ##############
+                            item -= 1
+
+                        # Move cursor DOWN
+                        if(event.key == keyboard.Key.down or event.key == keyboard.Key.right):
+                            if(item == 3):
+                                item = -1
+                            ##############
+                            item += 1
+
+                        # Confirm / loop stop condition
+                        if(event.key == keyboard.Key.space):
+                            loop = False
+
+                        # End of event
+                        break
+
+        # Return selected option
+        return item
 
     # Confirmation message
     def yesOrNo(self):

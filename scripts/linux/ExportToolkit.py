@@ -12,7 +12,7 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Linux Python Edition
-# Version: PROTOTYPE ~ 2023/08/08
+# Version: PROTOTYPE ~ 2023/08/09
 # Author: @chrisGrando
 # ****************************************************************************************************
 
@@ -45,7 +45,20 @@ class ExportToolkit:
 
         # Export & Compress
         if(option == 0):
-            targetPlatforms = menu.platformMenu()
+            # Target platforms
+            target = menu.platformMenu()
+
+            # Abort if no platforms were selected
+            if(not target[0] and not target[1] and not target[2] and not target[3] and not target[4]):
+                print("\n-----------------------------------------------------------")
+                print("[WARNING] No platforms were selected. Aborting...")
+                print("-----------------------------------------------------------")
+                menu.pressAnyKey()
+
+            # Compression method
+            compression = menu.compressMenu()
+
+            # Exit
             menu.pressAnyKey()
 
         # Build project
