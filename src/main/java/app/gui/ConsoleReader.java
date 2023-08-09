@@ -29,6 +29,9 @@ public class ConsoleReader {
                 String line = sc.nextLine();
                 this.fileContents += line + "\n";
             }
+
+            //Fecha o arquivo
+            sc.close();
         }
         catch (IOException error) {
             String msg = "[AVISO] Não foi possível ler o arquivo <" + path + ">...";
