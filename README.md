@@ -7,6 +7,7 @@ Trabalho Prático - BDII
 2. [Compilar projeto](#project)
 	+ [Instalar dependências](#install)
 	+ [Abrir & Compilar](#compile)
+ 	+ [Exportar projeto](#export) 
 3. [Executar](#run)
 4. [Parâmetros de linha de comando](#args)
 
@@ -83,20 +84,48 @@ Os arquivos compilados estarão disponíveis na pasta *target*.
 > OBS.: Na primeira vez que o software é compilado, o processo pode demorar entre 5 ~ 10 minutos.
 > É necessário ter conexão com a internet.
 
+### Exportar projeto <a name="export"></a>
+Para compilar, empacotar e comprimir o projeto de forma automatizada, utilize a coleção de scripts "ExportToolkit".
+
+- Windows: <br>
+Duplo clique em ```ExportToolkit.bat```. <br>
+(Requer Windows PowerShell 5.1+)
+
+- Linux: <br>
+Abra o terminal na pasta do projeto e digite:
+```
+sh ExportToolkit.sh
+```
+(Requer Python 3.7+)
+
 ## Executar <a name="run"></a>
+
+- Windows: <br>
+Duplo clique em ```sgbd-log-x64.exe``` ou ```sgbd-log-x32.exe```.
+
+- Linux: <br>
+Marque ```start.sh``` como **executável**, dê duplo clique no arquivo e escolha **executar**. 
 
 - Dentro da IDE: <br>
 Clique no botão ▶️ *Run Project*.
 
-- Na linha de comando (com parâmetros): <br>
-```
-java -jar sgbd-log.jar [-v | -h] -host [NOME DO HOST] -port [NÚMERO DA PORTA] -database [NOME DO BANCO] -user [USUÁRIO] -password [SENHA] -log [SGBD LOG] -table [NOME DA TABELA] -json [TABELA JSON]
-```
+- Linha de comando (com parâmetros):
 
-Exemplo:
-```
-java -jar sgbd-log.jar -database tp2 -log database/entrada_log.txt -json database/metadado.json
-```
+	+ Windows:
+	```
+	sgbd-log-x??.exe [-v | -h] -gui -host [NOME DO HOST] -port [NÚMERO DA PORTA] -database [NOME DO BANCO] -user [USUÁRIO] -password [SENHA] -log [SGBD LOG] -table [NOME DA TABELA] -json [TABELA JSON]
+	```
+ 	(Substitua ```??``` por ```32``` ou ```64```)
+
+ 	+ Linux:
+	```
+	sh start.sh [-v | -h] -gui -host [NOME DO HOST] -port [NÚMERO DA PORTA] -database [NOME DO BANCO] -user [USUÁRIO] -password [SENHA] -log [SGBD LOG] -table [NOME DA TABELA] -json [TABELA JSON]
+	```
+
+	+ Arquivo JAR:
+	```
+	java -jar sgbd-log.jar [-v | -h] -gui -host [NOME DO HOST] -port [NÚMERO DA PORTA] -database [NOME DO BANCO] -user [USUÁRIO] -password [SENHA] -log [SGBD LOG] -table [NOME DA TABELA] -json [TABELA JSON]
+	```
 
 ## Parâmetros de linha de comando <a name="args"></a>
 
