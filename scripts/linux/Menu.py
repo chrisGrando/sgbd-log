@@ -12,7 +12,7 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Linux Python Edition
-# Version: PROTOTYPE ~ 2023/08/09
+# Version: PROTOTYPE ~ 2023/08/18
 # Author: @chrisGrando
 # ****************************************************************************************************
 
@@ -57,7 +57,7 @@ class Menu:
             print("          |_|                                              ")
             print("***********************************************************")
             print("           ExportToolkit ~ Linux Python Edition")
-            print("             Version: PROTOTYPE ~ 2023/08/09")
+            print("             Version: PROTOTYPE ~ 2023/08/18")
             print("                  Author: @chrisGrando")
             print("***********************************************************")
             print("Select an option below:")

@@ -12,12 +12,13 @@
 #                   |__/                                                                              
 # ****************************************************************************************************
 # ExportToolkit ~ Linux Python Edition
-# Version: PROTOTYPE ~ 2023/08/09
+# Version: PROTOTYPE ~ 2023/08/18
 # Author: @chrisGrando
 # ****************************************************************************************************
 
 import platform
 import sys
+from Export import Export
 from Maven import Maven
 from Menu import Menu
 
@@ -36,6 +37,7 @@ class ExportToolkit:
         architecture = platform.architecture()[0]
         menu = Menu()
         maven = Maven()
+        export = Export(architecture, rootProjectPath)
 
         # *** Main code field ***
 
@@ -65,8 +67,11 @@ class ExportToolkit:
             version = menu.appVersion()
 
             # Run Export & Compress
-            print("\n" + name)
-            print(version)
+            export.appName = name
+            export.appVersion = version
+            export.compression = compression
+            export.setPlatforms(target)
+            export.runExportAndCompress()
 
             # Exit
             menu.pressAnyKey()
