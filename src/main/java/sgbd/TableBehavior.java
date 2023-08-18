@@ -58,8 +58,11 @@ public class TableBehavior {
             
             //Percorre todas as colunas
             for(int i = 0; i < size; i++) {
-                //Converte coluna em String
-                fullLine[i] = row[i].toString();
+                //Converte coluna em String (se não estiver vazia)
+                if(row[i] != null)
+                    fullLine[i] = row[i].toString();
+                else
+                    fullLine[i] = "";
             }
             
             //Adiciona linha convertida em String
